@@ -22,14 +22,10 @@ export const StyledBoard: React.FC<Props> = (props) => {
     let validMove = null;
     const pieceOnTargetSquare = game.get(targetSquare as Square);
     if (pieceOnTargetSquare) {
-      console.log('yes there is a piece ', pieceOnTargetSquare)
       const currentTargetPieceHealth = piecesHealth[pieceToPiecesConversion(pieceOnTargetSquare)]
       const damageToDeal = pieceInitialHealthAndDamage[piecesToStringName(piece)].damage;
       const healthLeft = currentTargetPieceHealth - damageToDeal;
-      console.log('piece converson', pieceToPiecesConversion(pieceOnTargetSquare))
-      console.log('current target piece health ', piecesHealth);
-      console.log('damage to deal', damageToDeal);
-      console.log('health left' , healthLeft);
+  
       if (healthLeft > 0) {
         console.log('yes update health');
         dispatch(updateHealth({
