@@ -1,6 +1,6 @@
 import { Pieces } from "react-chessboard";
 import {createReducer} from 'deox';
-import { setupPieces } from "../actions/pieces";
+import { dealDamage, updateHealth } from "../actions/pieces";
 
 export type PiecesHealthState = {
   [k in Pieces] : number;
@@ -22,5 +22,19 @@ const state : PiecesHealthState = {
 }
 
 export const reducer = createReducer(state as PiecesHealthState, (handleAction) => [
-  handleAction(setupPieces, (state) => state)
+  // handleAction(dealDamage, (state,{payload}) => {
+  //   const {damage, piece} = payload;
+  //   const diff = state[piece] - damage;
+  //   return {
+  //     ...state,
+  //     [piece]: diff < 0 ? 0 : diff
+  //   }
+  // })
+  handleAction(updateHealth, (state, {payload}) => {
+    const {health, piece} = payload;
+    return {
+      ...state,
+      [piece]: health
+    }
+  })
 ])

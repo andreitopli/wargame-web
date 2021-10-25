@@ -1,19 +1,21 @@
 import React from 'react';
-import { createUseStyles } from '../../../lib/jss';
+import { createUseStyles } from '../../../../lib/jss';
 import {Pieces} from 'react-chessboard';
 import {pieces} from './media/pieces';
-import {defaultPieces} from './media/pieces_svg';
+// import {defaultPieces} from './media/pieces_svg';
 import {GiBattleAxe, GiHearts} from 'react-icons/gi';
+import { useSelector } from 'react-redux';
+import { selectPiecesHealth } from '../../../../reudx/selectors/selectPiecesHealth';
 
 type Props = {
   damage: number;
-  health: number;
   type: Pieces
 };
 
 export const Piece: React.FC<Props> = (props) => {
   const cls = useStyles();
-  const {damage, health, type} = props;
+  const {damage, type} = props;
+  const piecesHealth = useSelector(selectPiecesHealth);
 
   return (
     <div className={cls.container}>
@@ -25,7 +27,7 @@ export const Piece: React.FC<Props> = (props) => {
     </div>
     <div className={cls.infoContainer}>
       <GiHearts color='#cb4141'/>
-      <div className={cls.healthDisplay}>{health}</div>
+      <div className={cls.healthDisplay}>{piecesHealth[type]}</div>
     </div>
     </div>
    {/* {defaultPieces[type]} */}

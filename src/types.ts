@@ -6,3 +6,7 @@ export type PiecesHealthAndDamageDict = {
     damage: number;
   }
 }
+
+export type InitialToPieceName = {
+  [k: string] : PieceName
+}
