@@ -3340,10 +3340,9 @@ check-types@^11.1.1:
   resolved "https://registry.yarnpkg.com/check-types/-/check-types-11.1.2.tgz#86a7c12bf5539f6324eb0e70ca8896c0e38f3e2f"
   integrity sha512-tzWzvgePgLORb9/3a0YenggReLKAIb2owL03H2Xdoe5pKcUyWRSEQ8xfCar8t2SIAuEDwtmx2da1YB52YuHQMQ==
 
-chess.js@^0.12.0:
+"chess.js@https://github.com/andreitopli/chess.js.git#f5bc6bd":
   version "0.12.0"
-  resolved "https://registry.yarnpkg.com/chess.js/-/chess.js-0.12.0.tgz#ffca1773b93a4aa044891de81286e264ca229b00"
-  integrity sha512-eF1xf4j88r/AwIRxqV1FXZbVgMt4yUx05xrL+ZMqUrY+snFrUxGVHs0VgEd3AvngujDE9th7XZqqCwEKEQ7mWQ==
+  resolved "https://github.com/andreitopli/chess.js.git#f5bc6bd95be55081b9f44c596523894ce7eb35f7"
 
 chokidar@^2.1.8:
   version "2.1.8"
@@ -9413,10 +9412,9 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
-react-chessboard@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/react-chessboard/-/react-chessboard-0.0.15.tgz#9b7ff4cebc0a29096754e7e41e13acffbb9ac256"
-  integrity sha512-+Kb28HRdANQGGbcgarNxDAWKR3+b8ugA4i43TzuGWXUj2eox0ejQPgpx60h3x5cQ/oax4MoD2Ri4ZBlkwGQY6A==
+"react-chessboard@https://github.com/andreitopli/react-chessboard.git#100c0b0":
+  version "0.0.16"
+  resolved "https://github.com/andreitopli/react-chessboard.git#100c0b08385fa0ec14bb15553d9218cd1044c4a2"
   dependencies:
     prop-types "^15.7.2"
     react-dnd "^14.0.3"

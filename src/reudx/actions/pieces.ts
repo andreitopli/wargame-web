@@ -1,5 +1,6 @@
 import { createAction } from "deox";
 import { Pieces } from "react-chessboard";
+import { ExtendedPieces } from "../reducers/piecesReducer";
 
 export const dealDamage = createAction('dealDamage', 
 (resolve) => (p: {
@@ -10,5 +11,5 @@ export const dealDamage = createAction('dealDamage',
 export const updateHealth = createAction('updateHealth',
 (resolve) => (p: {
   health: number;
-  piece:Pieces
+  piece:ExtendedPieces
 }) => resolve(p));

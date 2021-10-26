@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react'
 import {Piece} from './components/Piece/Piece'
 import { piecesToStringName, pieceToPiecesConversion} from './utils'
 import { getNewChessGame } from '../../lib/chess/chess'
-import {ChessInstance, ShortMove, Square} from 'chess.js';
+import {ShortMove, Square} from 'chess.js';
 import { pieceInitialHealthAndDamage } from '../../config'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPiecesHealth } from '../../reudx/selectors/selectPiecesHealth'
 import { updateHealth } from '../../reudx/actions/pieces'
+import { ExtendedPieces } from '../../reudx/reducers/piecesReducer'
+import { ChessInstance } from '../../lib/chess/types'
 
 type Props = {}
 
@@ -20,18 +22,18 @@ export const StyledBoard: React.FC<Props> = (props) => {
 
   const onPieceDrop = (sourceSquare: string, targetSquare:string, piece: Pieces) => {
     let validMove = null;
-    const pieceOnTargetSquare = game.get(targetSquare as Square);
+    const pieceOnTargetSquare = document.getElementById(targetSquare)?.firstElementChild?.id
     if (pieceOnTargetSquare) {
-      const currentTargetPieceHealth = piecesHealth[pieceToPiecesConversion(pieceOnTargetSquare)]
+      const currentTargetPieceHealth = piecesHealth[pieceOnTargetSquare as ExtendedPieces];
       const damageToDeal = pieceInitialHealthAndDamage[piecesToStringName(piece)].damage;
       const healthLeft = currentTargetPieceHealth - damageToDeal;
-  
       if (healthLeft > 0) {
         console.log('yes update health');
         dispatch(updateHealth({
           health : healthLeft,
-          piece:  pieceToPiecesConversion(pieceOnTargetSquare)
+          piece:  pieceOnTargetSquare as ExtendedPieces
         }))
+        swapTurn()
         return false;
       }
     }
@@ -49,6 +51,21 @@ export const StyledBoard: React.FC<Props> = (props) => {
     if (validMove === null) { return false};
     return true;
   }
+
+  function swapTurn() {
+    let tokens = game.fen().split(" ");
+    tokens[1] = game.turn() === "b" ? "w" : "b";
+    tokens[3] = "-";
+    setGame((prev) => {
+      const updatedGame = {...prev}
+      updatedGame.load(tokens.join(" "));
+      return updatedGame
+    })
+  }
+
+  useEffect(() => {
+    console.log('game changed. new game', game.fen());
+  },[game])
 
   return (
     <Chessboard
