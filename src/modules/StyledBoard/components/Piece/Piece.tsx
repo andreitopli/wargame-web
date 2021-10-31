@@ -67,12 +67,8 @@ export const Piece: React.FC<Props> = (props) => {
     }
   },[])
 
-  useEffect(() => {
-    console.log('piece key id ', pieceKeyID.current)
-  },[pieceKeyID])
-
   return (
-    <div className={cls.container} ref={containerRef}>
+    <div className={cls.container}>
       <img src={pieces[type]} width={45} height={45} alt={props.type} />
       <div className={cls.bottomPart}>
         <div className={cls.infoContainer}>

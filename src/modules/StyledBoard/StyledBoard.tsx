@@ -1,4 +1,4 @@
-import {Chessboard, Pieces} from 'react-chessboard'
+// import {Chessboard, Pieces} from 'react-chessboard'
 import React, { useEffect, useState } from 'react'
 import {Piece} from './components/Piece/Piece'
 import { piecesToStringName, pieceToPiecesConversion} from './utils'
@@ -10,6 +10,10 @@ import { selectPiecesHealth } from '../../reudx/selectors/selectPiecesHealth'
 import { updateHealth } from '../../reudx/actions/pieces'
 import { ExtendedPieces } from '../../reudx/reducers/piecesReducer'
 import { ChessInstance } from '../../lib/chess/types'
+// import Chessground from 'react-chessground';
+// import 'react-chessground/dist/styles/chessground.css';
+import { Pieces } from 'react-chessboard';
+import { Chessboard } from 'react-chessboard';
 
 type Props = {}
 
@@ -62,10 +66,6 @@ export const StyledBoard: React.FC<Props> = (props) => {
       return updatedGame
     })
   }
-
-  useEffect(() => {
-    console.log('game changed. new game', game.fen());
-  },[game])
 
   return (
     <Chessboard
