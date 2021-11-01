@@ -10,6 +10,7 @@ import {selectPiecesHealth} from '../../../../reudx/selectors/selectPiecesHealth
 type Props = {
   damage: number
   type: Pieces
+  id:string;
 }
 
 const PIECES = [
@@ -65,6 +66,7 @@ export const Piece: React.FC<Props> = (props) => {
     if (!pieceKeyID.current){
       pieceKeyID.current = containerRef.current?.parentElement?.className as string;
     }
+    console.log('piece id ', props.id)
   },[])
 
   return (

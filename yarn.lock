@@ -3348,13 +3348,13 @@ check-types@^11.1.1:
   resolved "https://registry.yarnpkg.com/check-types/-/check-types-11.1.2.tgz#86a7c12bf5539f6324eb0e70ca8896c0e38f3e2f"
   integrity sha512-tzWzvgePgLORb9/3a0YenggReLKAIb2owL03H2Xdoe5pKcUyWRSEQ8xfCar8t2SIAuEDwtmx2da1YB52YuHQMQ==
 
-"chess.js@https://github.com/andreitopli/chess.js.git#f5bc6bd":
+"chess.js@https://github.com/andreitopli/chess.js.git":
   version "0.12.0"
   resolved "https://github.com/andreitopli/chess.js.git#f5bc6bd95be55081b9f44c596523894ce7eb35f7"
 
-"chessground@https://github.com/andreitopli/chessground.git", "chessground@https://github.com/andreitopli/chessground.git#8a260f0":
+"chessground@https://github.com/andreitopli/chessground.git":
   version "8.1.7"
-  resolved "https://github.com/andreitopli/chessground.git#8a260f0f220dd2c9f67cffa81f0216cca3f145c7"
+  resolved "https://github.com/andreitopli/chessground.git#b28535c5fdbf8a59e13746987d81a8992a44c2bb"
 
 chokidar@^2.1.8:
   version "2.1.8"
@@ -9433,9 +9433,9 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
-"react-chessboard@https://github.com/andreitopli/react-chessboard.git#7584bf6":
+"react-chessboard@https://github.com/andreitopli/react-chessboard.git":
   version "0.0.16"
-  resolved "https://github.com/andreitopli/react-chessboard.git#7584bf6b214a6a58b8edee553639be7514afed21"
+  resolved "https://github.com/andreitopli/react-chessboard.git#8ae482860e2dd07134ee473016bc79ff82eb5cea"
   dependencies:
     prop-types "^15.7.2"
     react-dnd "^14.0.3"
@@ -9443,11 +9443,11 @@ react-app-polyfill@^2.0.0:
     react-dnd-multi-backend "^6.0.2"
     react-dnd-touch-backend "^14.1.0"
 
-"react-chessground@https://github.com/andreitopli/react-chessground.git#a57f758":
+"react-chessground@https://github.com/andreitopli/react-chessground.git":
   version "1.5.0"
-  resolved "https://github.com/andreitopli/react-chessground.git#a57f758147807716e28019459738b8790885dd0c"
+  resolved "https://github.com/andreitopli/react-chessground.git#21860ae015745a9a1d76a8fe76a9c4a45791fcf8"
   dependencies:
-    chessground "https://github.com/andreitopli/chessground.git#8a260f0"
+    chessground "https://github.com/andreitopli/chessground.git"
 
 react-dev-utils@^11.0.3:
   version "11.0.4"

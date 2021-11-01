@@ -31,6 +31,7 @@ declare module 'react-chessboard' {
     droppedPiece: string
     targetSquare: string
     sourceSquare: string
+    id:string
   }
   type CustomPieceFn = (args: CustomPieceFnArgs) => ReactElement
 
