@@ -22,6 +22,10 @@ declare module 'react-chessground' {
   export default class Chessground extends React.Component<ChessgroundProps> {}
 }
 
+declare module 'react-chess-pieces' {
+  export default class Piece extends React.Component<{piece: string}> {}
+}
+
 declare module 'react-chessboard' {
   import {CSSProperties, ReactElement} from 'react'
 
