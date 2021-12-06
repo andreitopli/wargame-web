@@ -1,11 +1,11 @@
 import React, { useEffect, useReducer, useRef} from 'react'
-import {createUseStyles} from '../../../../lib/jss'
+import {createUseStyles} from '../../../../../../lib/jss'
 import {Pieces} from 'react-chessboard'
 import {pieces} from './media/pieces'
 // import {defaultPieces} from './media/pieces_svg';
 import {GiBattleAxe, GiHearts} from 'react-icons/gi'
 import {useSelector} from 'react-redux'
-import {selectPiecesHealth} from '../../../../reudx/selectors/selectPiecesHealth'
+import {selectPiecesHealth} from '../../../../../../reudx/selectors/selectPiecesHealth'
 
 type Props = {
   damage: number
