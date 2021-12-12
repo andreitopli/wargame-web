@@ -8,7 +8,7 @@ import {StyledBoard, StyledBoardProps} from './StyledBoard/StyledBoard'
 import {
   toChessColor,
   toDests,
-} from './StyledBoard/utils'
+} from './StyledBoard/utils';
 
 export type ChessBoardProps = Omit<StyledBoardProps, 'onMove' | 'fen'> & {
   id: string
@@ -99,19 +99,6 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
     if (!this.props.canInteract) {
       return;
     }
-    
-
-    // const pieceAtDest = this.chess.get(nextMove.to);
-
-    // if (pieceAtDest) {
-    //   this.props.onMove({
-    //     move: this.state.current.lastMove as ShortMove,
-    //     fen: this.state.current.fen,
-    //     pgn: this.state.current.pgn
-    //   })
-    //   this.props.swapTurn();
-    //   return;
-    // }
 
     const valid = this.chess.move(nextMove);
 

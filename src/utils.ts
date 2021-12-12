@@ -11,6 +11,6 @@ export const pieceTypeToPieceName: InitialToPieceName = {
 }
 
 export function getPiecesDamage(piece: PiecesID): number {
-  const p = piece.split('')[1];
+  const p = piece.split('')[1].toLowerCase();
   return pieceInitialHealthAndDamage[pieceTypeToPieceName[p as keyof InitialToPieceName]].damage
 } 

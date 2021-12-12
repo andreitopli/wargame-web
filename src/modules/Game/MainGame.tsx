@@ -4,7 +4,6 @@ import {ChessBoardProps} from 'react-chessboard'
 import {useDispatch, useSelector} from 'react-redux'
 import {addMove, swapTurn} from 'src/reudx/actions/game'
 import {
-  dealDamage,
   updateHealth,
   updatePosition,
 } from 'src/reudx/actions/pieces'
@@ -54,23 +53,20 @@ export const MainGame: React.FC<Props> = ({game, onAddMove, ...props}) => {
 
   const onMove = (move: ShortMove) => {
     const pieceAtDest = indexByPosition[move.to]
-    const piecesAtOrigin = indexByPosition[move.from]
-    console.log('index by position', indexByPosition);
-    console.log('move',move);
-    console.log('piece at origin', piecesAtOrigin);
-    console.log('piece at dest', pieceAtDest);
+    const pieceAtOrigin = indexByPosition[move.from]
 
     if (pieceAtDest) {
-      const damage = getPiecesDamage(piecesAtOrigin)
+      const damage = getPiecesDamage(pieceAtOrigin)
       const updatedHealth = piecesHealth[pieceAtDest] - damage
       if (updatedHealth > 0) {
         dispatch(updateHealth({piece: pieceAtDest, health: updatedHealth}))
         return
       }
-      dispatch(updatePosition({piece: piecesAtOrigin, position: move.to}))
+      dispatch(updatePosition({piece: pieceAtOrigin, position: move.to}))
       dispatch(addMove({move}))
+      return;
     }
-    dispatch(updatePosition({piece: piecesAtOrigin, position: move.to}))
+    dispatch(updatePosition({piece: pieceAtOrigin, position: move.to}))
     dispatch(addMove({move}))
   }
 

@@ -3,7 +3,7 @@ import {createReducer} from 'deox'
 import {getNewChessGame} from 'src/lib/chess/chess'
 import {otherChessColor} from 'src/modules/Game/GameBoard/StyledBoard/utils'
 import {Game} from 'src/types'
-import {addMove, setupGame, swapTurn} from '../actions/game'
+import {addMove, setupGame, swapTurn, undoMove} from '../actions/game'
 
 const chess = getNewChessGame()
 
