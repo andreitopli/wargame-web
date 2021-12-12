@@ -1,7 +1,7 @@
 import {createReducer} from 'deox'
 import {PiecesHealth} from 'src/types'
 import {pieceInitialHealthAndDamage} from '../../config'
-import {updateHealth} from '../actions/pieces'
+import {dealDamage, updateHealth} from '../actions/pieces'
 
 const state: PiecesHealth = {
   bR0: pieceInitialHealthAndDamage.rook.health,
@@ -41,20 +41,19 @@ const state: PiecesHealth = {
 export const reducer = createReducer(
   state as PiecesHealth,
   (handleAction) => [
-    // handleAction(dealDamage, (state,{payload}) => {
-    //   const {damage, piece} = payload;
-    //   const diff = state[piece] - damage;
-    //   return {
-    //     ...state,
-    //     [piece]: diff < 0 ? 0 : diff
-    //   }
-    // })
+    handleAction(dealDamage, (state, {payload}) => {
+      const {damage, piece} = payload
+      return {
+        ...state,
+        [piece]: state[piece] - damage
+      }
+    }),
     handleAction(updateHealth, (state, {payload}) => {
       const {health, piece} = payload
       return {
         ...state,
-        [piece]: health,
+        [piece] : health
       }
-    }),
+    })
   ],
 )

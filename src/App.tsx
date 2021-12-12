@@ -18,7 +18,8 @@ function App() {
   return (
     <div className="App">
       <MainGame 
-        game={game}
+        game={game.game}
+        displayable={{fen: game.displayable.fen}}
         boardOrientation='white'
         onAddMove={(move) => {
           dispatch(addMove(move))

@@ -1,12 +1,11 @@
 import { Square } from "chess.js";
 import { createAction } from "deox";
-import { Pieces } from "react-chessboard";
 import { PiecesID } from "src/types";
 
 export const dealDamage = createAction('dealDamage', 
 (resolve) => (p: {
   damage: number;
-  piece: Pieces;
+  piece: PiecesID;
 }) => resolve(p))
 
 export const updateHealth = createAction('updateHealth',

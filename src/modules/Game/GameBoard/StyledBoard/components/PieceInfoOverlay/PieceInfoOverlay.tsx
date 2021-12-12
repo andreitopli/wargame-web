@@ -2,22 +2,14 @@ import React from 'react'
 import {GiBattleAxe, GiHearts} from 'react-icons/gi'
 import {useSelector} from 'react-redux'
 import {pieceInitialHealthAndDamage} from 'src/config'
-import {InitialToPieceName, PieceInitial, PieceName, PiecesID} from 'src/types'
+import { PieceInitial, PieceName, PiecesID} from 'src/types'
+import { pieceTypeToPieceName } from 'src/utils'
 import {createUseStyles} from '../../../../../../lib/jss'
 import {selectPiecesHealth} from '../../../../../../reudx/selectors/selectPiecesHealth'
 import {PieceInfoOverlayDOM} from './PieceInfoOverlayDOM'
 
 type Props = {
   piece: PiecesID
-}
-
-const pieceTypeToPieceName: InitialToPieceName = {
-  b: 'bishop',
-  r: 'rook',
-  n: 'knight',
-  q: 'queen',
-  k: 'king',
-  p: 'pawn',
 }
 
 export const PieceInfoOverlay: React.FC<Props> = ({piece}) => {

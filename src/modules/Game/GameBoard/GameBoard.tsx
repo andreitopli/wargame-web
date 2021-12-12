@@ -20,6 +20,7 @@ export type ChessBoardProps = Omit<StyledBoardProps, 'onMove' | 'fen'> & {
   canInteract: boolean;
   onMove: (p: {move: ShortMove; fen: string; pgn: string}) => void
   swapTurn : () => void;
+  fen: string;
 }
 
 type ChessState = {
@@ -87,34 +88,30 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
   }
 
   componentDidUpdate(prevProps: ChessBoardProps) {
-    if (prevProps.pgn !== this.props.pgn) {
+    if ((prevProps.pgn !== this.props.pgn) || (prevProps.fen !== this.props.fen)) {
       this.commit()
     }
   }
 
   private onMove(nextMove: ChessMove) {
-    console.log('on move', nextMove);
+  
 
     if (!this.props.canInteract) {
       return;
     }
     
 
-    const pieceAtDest = this.chess.get(nextMove.to);
-      console.log('piece at dest', pieceAtDest)
+    // const pieceAtDest = this.chess.get(nextMove.to);
 
-    if (pieceAtDest) {
-      this.props.onMove({
-        move: this.state.current.lastMove as ShortMove,
-        fen: this.state.current.fen,
-        pgn: this.state.current.pgn
-      })
-      this.props.swapTurn();
-      return;
-    }
-
-
-    console.log('on move can', nextMove);
+    // if (pieceAtDest) {
+    //   this.props.onMove({
+    //     move: this.state.current.lastMove as ShortMove,
+    //     fen: this.state.current.fen,
+    //     pgn: this.state.current.pgn
+    //   })
+    //   this.props.swapTurn();
+    //   return;
+    // }
 
     const valid = this.chess.move(nextMove);
 
@@ -137,6 +134,7 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
   }
 
   private calcMovable() {
+    console.log('turn to move', this.chess.turn())
     return {
       free: false,
       dests: this.props.playable ? toDests(this.chess) : undefined,

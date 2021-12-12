@@ -82,6 +82,7 @@ export const StyledBoard: React.FC<StyledBoardProps> = ({
               chessgroundRef.current = (r as any).cg;
             }
           }}
+          turnColor={props.turnColor}
           fen={props.fen}
           draggable={{
             enabled: true,

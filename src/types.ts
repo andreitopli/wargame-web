@@ -31,7 +31,6 @@ export type Game = {
   homeColor: Color,
   pgn: string;
   state : 'started' | 'stopped' | 'pending';
-  history: ChessHistory;
   players: [GamePlayer, GamePlayer];
   lastMoveBy: Color | undefined;
   turn: Color;
