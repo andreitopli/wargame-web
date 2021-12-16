@@ -8,7 +8,7 @@ import {
 } from 'src/modules/Game/types'
 import {ChessInstance, ShortMove, Square} from 'chess.js'
 import {
-  getAdiacentPositionForBisop,
+  getAdjecentPosition,
   getPiecesDamage,
   pieceTypeToPieceName,
   setPiecesPositionsBySquare,
@@ -128,28 +128,36 @@ export class WarChessEngine {
           pieceTypeToPieceName[
             pieceAtOrig.split('')[1].toLowerCase() as PieceInitial
           ]
-        if (originPieceType === 'bishop') {
-          const positionToMove = getAdiacentPositionForBisop(this.piecePositions, pieceAtOrig, pieceAtDest);
+        if (
+          originPieceType === 'bishop' ||
+          originPieceType === 'rook' ||
+          originPieceType === 'queen'
+        ) {
+          const positionToMove = getAdjecentPosition(
+            this.piecePositions,
+            pieceAtOrig,
+            pieceAtDest,
+          )
           if (positionToMove !== move.from) {
-            console.log('moving bishop near the piece');
+            console.log(`moving the ${originPieceType} to adjecent position`)
             const moveAdj: ShortMove = {
               from: move.from,
               to: positionToMove,
             }
-            console.log('move ADJ ', moveAdj)
+            console.log('move', moveAdj)
             console.log('old fen', this.chess.fen())
             this.chess.move(moveAdj, {sloppy: true})
             this.updatePosition(pieceAtOrig, positionToMove)
             this.updateHealth(pieceAtDest, newHealth)
             console.log('new fen', this.chess.fen())
             console.log('turn now', this.chess.turn())
-            return true;
+            return true
           }
-          this.updateHealth(pieceAtDest, newHealth);
-          this.swapTurn();
+          this.updateHealth(pieceAtDest, newHealth)
+          this.swapTurn()
           console.log('new fen', this.chess.fen())
           console.log('turn now', this.chess.turn())
-          return false;
+          return false
         }
 
         console.log('deal damage and swap turn')
@@ -194,8 +202,8 @@ export class WarChessEngine {
   swapTurn() {
     console.group('swap turn now!')
     console.log('current turn', this.chess.turn())
-    console.log('fen: ', this.chess.fen());
-    
+    console.log('fen: ', this.chess.fen())
+
     const tokens = this.chess.fen().split(' ')
     tokens[1] = this.chess.turn() === 'b' ? 'w' : 'b'
     //Without changing the en passant flag, the FEN can fail to load when white pushes a pawn two spaces and then black skips the turn.
@@ -204,9 +212,9 @@ export class WarChessEngine {
     tokens[5] =
       this.chess.turn() === 'b' ? (Number(tokens[5]) + 1).toString() : tokens[5]
     this.chess.load(tokens.join(' '))
-    console.log('new fen: ',tokens.join(' '))
-    console.log('new turn:', this.chess.turn());
-    console.groupEnd();
+    console.log('new fen: ', tokens.join(' '))
+    console.log('new turn:', this.chess.turn())
+    console.groupEnd()
   }
 
   getHealth() {

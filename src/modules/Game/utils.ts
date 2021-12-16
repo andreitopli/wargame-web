@@ -77,7 +77,7 @@ export function getSquareFromNumbericalPosition({
   return `${c}${row.toString()}` as Square
 }
 
-export function getAdiacentPositionForBisop(
+export function getAdjecentPosition(
   positions: PiecesPositions,
   orig: PiecesID,
   dest: PiecesID,
@@ -90,11 +90,11 @@ export function getAdiacentPositionForBisop(
   const diffRow = positionAtDest.row - positionAtOrigin.row
   // console.log('diff row', diffRow, 'diff col', diffCol)
   const direction: {col: number; row: number} = {
-    col: diffCol > 0 ? 1 : -1,
-    row: diffRow > 0 ? 1 : -1,
+    col: diffCol > 0 ? 1 : diffCol < 0 ? -1 : 0,
+    row: diffRow > 0 ? 1 : diffRow < 0 ? -1 : 0,
   }
   // console.log('direction', direction)
-  const steps = Math.abs(diffCol) - 1
+  const steps = Math.abs(Math.max(Math.abs(diffRow), Math.abs(diffCol))) - 1
   // console.log('steps', steps)
   const newPosition = {
     col: positionAtOrigin.col + direction.col * steps,
