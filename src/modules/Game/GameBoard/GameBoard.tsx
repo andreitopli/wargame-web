@@ -1,14 +1,23 @@
-import {ShortMove} from 'chess.js'
+import {ChessInstance, ShortMove, Square} from 'chess.js'
 import {Color} from 'chessground/types'
 import React from 'react'
 import {getNewChessGame} from 'src/lib/chess/chess'
-import {ChessInstance} from 'src/lib/chess/types'
-import {ChessBoardConfig, ChessMove} from 'src/types'
-import {StyledBoard, StyledBoardProps} from './StyledBoard/StyledBoard'
 import {
-  toChessColor,
-  toDests,
-} from './StyledBoard/utils';
+  ChessBoardConfig,
+  ChessMove,
+  IndexPosition,
+  PiecesHealth,
+  PiecesID,
+  PiecesPositions,
+} from 'src/types'
+import {StyledBoard, StyledBoardProps} from './StyledBoard/StyledBoard'
+import {otherChessColor, toChessColor, toDests} from './StyledBoard/utils'
+import {connect, MapDispatchToProps, MapStateToProps} from 'react-redux'
+import {RootState} from 'src/reudx/reducers/reducer'
+import {updateHealth, updatePosition} from 'src/reudx/actions/pieces'
+import {AppDispatch} from 'src/reudx/Provider'
+import {addMove} from 'src/reudx/actions/game'
+import {getPiecesDamage} from 'src/utils'
 
 export type ChessBoardProps = Omit<StyledBoardProps, 'onMove' | 'fen'> & {
   id: string
@@ -17,10 +26,19 @@ export type ChessBoardProps = Omit<StyledBoardProps, 'onMove' | 'fen'> & {
   config?: ChessBoardConfig
   orientation?: Color
   playable?: boolean
-  canInteract: boolean;
-  onMove: (p: {move: ShortMove; fen: string; pgn: string}) => void
-  swapTurn : () => void;
-  fen: string;
+  canInteract: boolean
+}
+
+type ConnectedProps = {
+  piecesPositions: PiecesPositions
+  piecesHealth: PiecesHealth
+  indexByPosition: IndexPosition
+}
+
+type DispatchProps = {
+  updateHealth: (piece: PiecesID, health: number) => void
+  updatePosition: (piece: PiecesID, position: Square) => void
+  addMove: (move: ShortMove) => void
 }
 
 type ChessState = {
@@ -33,8 +51,9 @@ type ChessState = {
 
 type State = {
   current: ChessState
-  uncommited?: ChessState
 }
+
+type ComponentProps = ChessBoardProps & ConnectedProps & DispatchProps
 
 const getCurrentChessState = (chess: ChessInstance): ChessState => {
   const history = chess.history({verbose: true})
@@ -48,10 +67,10 @@ const getCurrentChessState = (chess: ChessInstance): ChessState => {
   }
 }
 
-export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
+class GameBoardComponent extends React.PureComponent<ComponentProps, State> {
   private chess = getNewChessGame()
 
-  constructor(props: ChessBoardProps) {
+  constructor(props: ComponentProps) {
     super(props)
 
     this.chess.load_pgn(this.props.pgn || '')
@@ -60,7 +79,7 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
       current: getCurrentChessState(this.chess),
     }
 
-    this.onMove = this.onMove.bind(this);
+    this.onMove = this.onMove.bind(this)
   }
 
   private commit() {
@@ -71,7 +90,6 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
 
       this.setState({
         current: nextChessState,
-        uncommited: undefined,
       })
     } else {
       const loaded = this.chess.load_pgn(this.props.pgn)
@@ -81,51 +99,66 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
 
         this.setState({
           current: nextChessState,
-          uncommited: undefined,
         })
       }
     }
   }
 
   componentDidUpdate(prevProps: ChessBoardProps) {
-    if ((prevProps.pgn !== this.props.pgn) || (prevProps.fen !== this.props.fen)) {
+    if (prevProps.pgn !== this.props.pgn) {
       this.commit()
     }
   }
 
   private onMove(nextMove: ChessMove) {
-  
-
     if (!this.props.canInteract) {
-      return;
+      return
     }
 
-    const valid = this.chess.move(nextMove);
+    const valid = this.chess.move(nextMove)
 
     if (!valid) {
-      return;
+      return
     }
 
-    const uncommitedChessState = getCurrentChessState(
-      this.chess,
-    );
+    const pieceAtDest = this.props.indexByPosition[nextMove.to]
+    const pieceAtOrigin = this.props.indexByPosition[nextMove.from]
 
+    if (pieceAtDest) {
+      const damage = getPiecesDamage(pieceAtOrigin)
+      const updatedHealth = this.props.piecesHealth[pieceAtDest] - damage
 
-    this.setState({ uncommited: uncommitedChessState });
+      if (updatedHealth > 0) {
+        this.props.updateHealth(pieceAtDest, updatedHealth)
+        this.swapTurn()
+        return
+      }
 
-    this.props.onMove({
-      move: nextMove,
-      fen: uncommitedChessState.fen,
-      pgn: uncommitedChessState.pgn,
-    });
+      this.props.updatePosition(pieceAtOrigin, nextMove.to)
+      this.setState({current: getCurrentChessState(this.chess)})
+      this.props.addMove(nextMove)
+      return
+    }
+
+    this.setState({current: getCurrentChessState(this.chess)})
+    this.props.updatePosition(pieceAtOrigin, nextMove.to)
+    this.props.addMove(nextMove)
+  }
+
+  private swapTurn() {
+    this.setState({
+      current: {
+        ...this.state.current,
+        turn: otherChessColor(this.state.current.turn),
+      },
+    })
   }
 
   private calcMovable() {
-    console.log('turn to move', this.chess.turn())
     return {
       free: false,
       dests: this.props.playable ? toDests(this.chess) : undefined,
-      color: toChessColor(this.chess.turn()),
+      color: this.state.current.turn,
       showDests: true,
     } as const
   }
@@ -134,7 +167,9 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
     const {pgn, id, playable, orientation, homeColor, ...boardProps} =
       this.props
 
-    const chessState = this.state.uncommited || this.state.current
+      console.log('fen', this.state.current.fen)
+
+    const chessState = this.state.current
 
     return (
       <>
@@ -144,7 +179,12 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
           disableContextMenu
           viewOnly={false}
           fen={chessState.fen}
-          lastMove={chessState.lastMove && [chessState.lastMove.from, chessState.lastMove.to]}
+          lastMove={
+            chessState.lastMove && [
+              chessState.lastMove.from,
+              chessState.lastMove.to,
+            ]
+          }
           turnColor={chessState.turn}
           check={chessState.inCheck}
           movable={this.calcMovable()}
@@ -155,3 +195,43 @@ export class GameBoard extends React.PureComponent<ChessBoardProps, State> {
     )
   }
 }
+
+function piecesBySquare(positions: PiecesPositions): IndexPosition {
+  return Object.keys(positions).reduce((sum, el) => {
+    return {
+      ...sum,
+      [positions[el as PiecesID]]: el,
+    }
+  }, {} as IndexPosition)
+}
+
+const mapStateToProps: MapStateToProps<
+  ConnectedProps,
+  ChessBoardProps,
+  RootState
+> = (state: RootState) => {
+  const positions = state.position
+  const indexByPosition = piecesBySquare(positions)
+  return {
+    piecesPositions: state.position,
+    piecesHealth: state.health,
+    indexByPosition,
+  }
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, ChessBoardProps> = (
+  dispatch: AppDispatch,
+) => {
+  return {
+    updateHealth: (piece: PiecesID, health: number) =>
+      dispatch(updateHealth({piece, health})),
+    updatePosition: (piece: PiecesID, position: Square) =>
+      dispatch(updatePosition({piece, position})),
+    addMove: (move: ShortMove) => dispatch(addMove({move})),
+  }
+}
+
+export const GameBoard = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(GameBoardComponent)

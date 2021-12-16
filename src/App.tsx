@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import './App.css'
 import { MainGame } from './modules/Game/MainGame'
-import { addMove, setupGame } from './reudx/actions/game';
+import { setupGame } from './reudx/actions/game';
 import { selectGame } from './reudx/selectors/selectPiecesHealth'
 
 function App() {
@@ -19,11 +19,7 @@ function App() {
     <div className="App">
       <MainGame 
         game={game.game}
-        displayable={{fen: game.displayable.fen}}
         boardOrientation='white'
-        onAddMove={(move) => {
-          dispatch(addMove(move))
-        }}
       />
     </div>
   )

@@ -1,12 +1,11 @@
 import { Chess as ChessA} from 'chess.js';
 import * as ChessB from 'chess.js';
-import { ChessInstance } from './types';
 
 //This weirdness is due to the fact that node and browser js imports are working differently.
 const ChessConstructor = ChessA || ChessB
 
 export const getNewChessGame = (pgn?: string) => {
-  const instance = new ChessConstructor() as ChessInstance;
+  const instance = new ChessConstructor();
 
   if (pgn) {
     instance.load_pgn(pgn);

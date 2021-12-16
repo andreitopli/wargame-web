@@ -11,3 +11,5 @@ export const ReduxProvider: React.FC<Props> = (props) => {
     </Provider>
   );
 };
+
+export type AppDispatch = typeof store.dispatch

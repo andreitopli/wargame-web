@@ -151,3 +151,7 @@ export type PieceInitial = 'k' | 'r' | 'q' | 'n' | 'b' | 'p';
 export type InitialToPieceName = {
   [k in PieceInitial]: PieceName
 }
+
+export type IndexPosition = {
+  [k in Square]: PiecesID
+}
