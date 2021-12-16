@@ -1,26 +1,25 @@
+import {Color} from 'chessground/types'
 import React from 'react'
-import {ChessBoardProps} from 'react-chessboard'
-import {Game} from 'src/modules/Game/types'
+import {EngineProvider} from './GameBoard/EngineProvider/EngineProvider'
 import {GameBoard} from './GameBoard/GameBoard'
 
-type Props = Omit<
-  ChessBoardProps,
-  'onMove' | 'id' | 'pgn' | 'overlayComponent' | 'type' | 'config'
-> & {
-  game: Game
+type Props = {
+  boardOrientation: Color
 }
 
-export const MainGame: React.FC<Props> = ({game, ...props}) => {
+export const MainGame: React.FC<Props> = (props) => {
   return (
-    <GameBoard
-      canInteract
-      size={500}
-      id={game.id}
-      pgn={game.pgn}
-      playable
-      turnColor={game.turn}
-      homeColor={'white'}
-      {...props}
+    <EngineProvider
+      render={(game) => (
+        <GameBoard
+          canInteract
+          size={500}
+          game={game}
+          playable
+          homeColor={'white'}
+          {...props}
+        />
+      )}
     />
   )
 }

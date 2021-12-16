@@ -19,7 +19,6 @@ ChessgroundProps,
 export const StyledBoard: React.FC<StyledBoardProps> = ({
     orientation = 'white',
     onMove,
-    lastMove = [], 
     ...props
 }) => {
   const chessgroundRef = useRef<ChessgroundApi>();
@@ -30,49 +29,6 @@ export const StyledBoard: React.FC<StyledBoardProps> = ({
       <PieceInfoOverlay piece={piece as PiecesID}/>
     )))
   },[])
-  
-  // const onPieceDrop = (
-  //   sourceSquare: string,
-  //   targetSquare: string,
-  //   piece: Pieces,
-  // ) => {
-  //   let validMove = null
-  //   const pieceOnTargetSquare =
-  //     document.getElementById(targetSquare)?.firstElementChild?.id
-  //   if (pieceOnTargetSquare) {
-  //     const currentTargetPieceHealth =
-  //       piecesHealth[pieceOnTargetSquare as ExtendedPieces]
-  //     const damageToDeal =
-  //       pieceInitialHealthAndDamage[piecesToStringName(piece)].damage
-  //     const healthLeft = currentTargetPieceHealth - damageToDeal
-  //     if (healthLeft > 0) {
-  //       console.log('yes update health')
-  //       dispatch(
-  //         updateHealth({
-  //           health: healthLeft,
-  //           piece: pieceOnTargetSquare as ExtendedPieces,
-  //         }),
-  //       )
-  //       swapTurn()
-  //       return false
-  //     }
-  //   }
-  //   const move: ShortMove = {
-  //     to: targetSquare as Square,
-  //     from: sourceSquare as Square,
-  //     promotion: 'q',
-  //   }
-  //   setGame((prev) => {
-  //     const updatedGame = {...prev}
-  //     validMove = updatedGame.move(move)
-  //     return updatedGame
-  //   })
-
-  //   if (validMove === null) {
-  //     return false
-  //   }
-  //   return true
-  // }
 
   return (
     <>
@@ -93,7 +49,6 @@ export const StyledBoard: React.FC<StyledBoardProps> = ({
           })}
           onMove={(orig, dest) => onMove({ to: dest as Square, from: orig as Square })}
           orientation={orientation}
-          lastMove={lastMove}
           {...props}
         />
       {overlays}

@@ -5,8 +5,6 @@ import {otherChessColor} from 'src/modules/Game/GameBoard/StyledBoard/utils'
 import {Game} from 'src/modules/Game/types'
 import {addMove, setupGame, swapTurn} from '../actions/game'
 
-const chess = getNewChessGame()
-
 type State = {
   game: Game
   displayable: {
@@ -16,7 +14,7 @@ type State = {
 
 const initialState: State = {
   game: {
-    pgn: chess.pgn(),
+    pgn: '',
     id: new Date().getTime().toString(),
     state: 'pending',
     players: [

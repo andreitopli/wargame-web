@@ -1,26 +1,18 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import {useEffect} from 'react'
 import './App.css'
-import { MainGame } from './modules/Game/MainGame'
-import { setupGame } from './reudx/actions/game';
-import { selectGame } from './reudx/selectors/selectPiecesHealth'
+import {MainGame} from './modules/Game/MainGame'
 
 function App() {
-
-  const game = useSelector(selectGame);
-  const dispatch = useDispatch();
+  // const {game} = useSelector(selectGame)
+  // const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setupGame());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
-  
+    // dispatch(setupGame());
+  }, [])
+
   return (
     <div className="App">
-      <MainGame 
-        game={game.game}
-        boardOrientation='white'
-      />
+      <MainGame boardOrientation="white" />
     </div>
   )
 }

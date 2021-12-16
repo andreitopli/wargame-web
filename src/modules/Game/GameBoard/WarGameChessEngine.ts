@@ -85,6 +85,14 @@ export class WarChessEngine {
     return this.chess.fen()
   }
 
+  pgn() {
+    return this.chess.pgn()
+  }
+
+  in_check() {
+    return this.chess.in_check()
+  }
+
   turn() {
     return this.chess.turn()
   }
@@ -117,6 +125,10 @@ export class WarChessEngine {
 
   }
 
+  load(pgn: string){
+    this.chess.load_pgn(pgn);
+  }
+
   setPiecesPositions(positions: PiecesPositions) {
     this.piecePositions = positions;
     this.piecePositionIndexedBySquare = setPiecesPositionsBySquare(positions);
@@ -127,6 +139,16 @@ export class WarChessEngine {
 
   getTurn(){
     return this.chess.turn();
+  }
+
+  SQUARES() {
+    return this.chess.SQUARES; 
+  }
+
+  moves(options: {
+    verbose: true;
+    square?: string | undefined}) {
+    return this.chess.moves(options);
   }
 
   swapTurn() {
@@ -167,4 +189,3 @@ export class WarChessEngine {
     this.setPiecesHealth(newHealths);
   }
 }
-
