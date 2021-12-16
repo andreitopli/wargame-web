@@ -1,10 +1,21 @@
-import { pieceInitialHealthAndDamage } from "src/config";
-import { IndexPosition, PieceInitial, PiecesHealth, PiecesID, PiecesPositions } from "src/modules/Game/types";
-import {ChessInstance, ShortMove, Square} from 'chess.js';
-import { getPiecesDamage, pieceTypeToPieceName, setPiecesPositionsBySquare } from "src/modules/Game/utils";
+import {pieceInitialHealthAndDamage} from 'src/config'
+import {
+  IndexPosition,
+  PieceInitial,
+  PiecesHealth,
+  PiecesID,
+  PiecesPositions,
+} from 'src/modules/Game/types'
+import {ChessInstance, ShortMove, Square} from 'chess.js'
+import {
+  getAdiacentPositionForBisop,
+  getPiecesDamage,
+  pieceTypeToPieceName,
+  setPiecesPositionsBySquare,
+} from 'src/modules/Game/utils'
 
 export class WarChessEngine {
-  private piecePositions : PiecesPositions =  {
+  private piecePositions: PiecesPositions = {
     bR0: 'a8',
     bN0: 'b8',
     bB0: 'c8',
@@ -38,7 +49,7 @@ export class WarChessEngine {
     wP6: 'g2',
     wP7: 'h2',
   }
-  private pieceHealth : PiecesHealth =  {
+  private pieceHealth: PiecesHealth = {
     bR0: pieceInitialHealthAndDamage.rook.health,
     bN0: pieceInitialHealthAndDamage.knight.health,
     bB0: pieceInitialHealthAndDamage.bishop.health,
@@ -47,7 +58,7 @@ export class WarChessEngine {
     bB1: pieceInitialHealthAndDamage.bishop.health,
     bN1: pieceInitialHealthAndDamage.knight.health,
     bR1: pieceInitialHealthAndDamage.rook.health,
-    bP0: pieceInitialHealthAndDamage.pawn.health, 
+    bP0: pieceInitialHealthAndDamage.pawn.health,
     bP1: pieceInitialHealthAndDamage.pawn.health,
     bP2: pieceInitialHealthAndDamage.pawn.health,
     bP3: pieceInitialHealthAndDamage.pawn.health,
@@ -73,11 +84,12 @@ export class WarChessEngine {
     wP7: pieceInitialHealthAndDamage.pawn.health,
   }
 
-  private piecePositionIndexedBySquare: IndexPosition = setPiecesPositionsBySquare(this.piecePositions);
+  private piecePositionIndexedBySquare: IndexPosition =
+    setPiecesPositionsBySquare(this.piecePositions)
 
-  constructor(private chess : ChessInstance, pgn?: string) {
+  constructor(private chess: ChessInstance, pgn?: string) {
     if (pgn) {
-      chess.load_pgn(pgn);
+      chess.load_pgn(pgn)
     }
   }
 
@@ -96,105 +108,134 @@ export class WarChessEngine {
   turn() {
     return this.chess.turn()
   }
-  
-  move(move: ShortMove, options? : {sloppy? :boolean} | undefined): boolean {
-    const valid = this.chess.move(move);
+
+  move(move: ShortMove, options?: {sloppy?: boolean} | undefined): boolean {
+    const valid = this.chess.move(move)
     if (!valid) {
-      return false;
-    } 
-    this.chess.undo();
-
-    const pieceAtDest = this.piecePositionIndexedBySquare[move.to];
-    const pieceAtOrig = this.piecePositionIndexedBySquare[move.from];
-    console.log('piece at origin', pieceAtOrig)
-    if (pieceAtDest) {
-      console.log('piece at dest', pieceAtDest)
-      console.log('health at destination', this.pieceHealth[pieceAtDest])
-      const damage = getPiecesDamage(pieceAtOrig);
-      const newHealth = this.pieceHealth[pieceAtDest] - damage;
-      console.log('damage',damage)
-      if (newHealth > 0) {
-        this.updateHealth(pieceAtDest, newHealth);
-        console.log('check if bishop, queen or rook and move accordingly', pieceAtOrig)
-        const originPieceType = pieceTypeToPieceName[pieceAtOrig.split('')[1].toLowerCase() as PieceInitial];
-        // if (originPieceType === 'bishop') {
-        //   const positionAtDest = this.piecePositions[pieceAtDest];
-        // }
-        this.swapTurn();
-        console.log('applied damage, new health ', newHealth)
-        return false;
-      }
-      this.removePiece(pieceAtDest);
+      return false
     }
-    this.updatePosition(pieceAtOrig, move.to);
-    this.chess.move(move);
-    console.log('new positions', this.getPosition());
-    console.log('new position for moved piece', this.getPosition()[pieceAtOrig]);
-    return true;
+    this.chess.undo()
 
+    const pieceAtDest = this.piecePositionIndexedBySquare[move.to]
+    const pieceAtOrig = this.piecePositionIndexedBySquare[move.from]
+    if (pieceAtDest) {
+      const damage = getPiecesDamage(pieceAtOrig)
+      const newHealth = this.pieceHealth[pieceAtDest] - damage
+
+      if (newHealth > 0) {
+        console.log('health > 0 so dealing damage')
+        const originPieceType =
+          pieceTypeToPieceName[
+            pieceAtOrig.split('')[1].toLowerCase() as PieceInitial
+          ]
+        if (originPieceType === 'bishop') {
+          const positionToMove = getAdiacentPositionForBisop(this.piecePositions, pieceAtOrig, pieceAtDest);
+          if (positionToMove !== move.from) {
+            console.log('moving bishop near the piece');
+            const moveAdj: ShortMove = {
+              from: move.from,
+              to: positionToMove,
+            }
+            console.log('move ADJ ', moveAdj)
+            console.log('old fen', this.chess.fen())
+            this.chess.move(moveAdj, {sloppy: true})
+            this.updatePosition(pieceAtOrig, positionToMove)
+            this.updateHealth(pieceAtDest, newHealth)
+            console.log('new fen', this.chess.fen())
+            console.log('turn now', this.chess.turn())
+            return true;
+          }
+          this.updateHealth(pieceAtDest, newHealth);
+          this.swapTurn();
+          console.log('new fen', this.chess.fen())
+          console.log('turn now', this.chess.turn())
+          return false;
+        }
+
+        console.log('deal damage and swap turn')
+        this.updateHealth(pieceAtDest, newHealth)
+        this.swapTurn()
+        console.log('turn now', this.chess.turn())
+        return false
+      }
+      this.removePiece(pieceAtDest)
+    }
+    console.log('just move')
+    this.updatePosition(pieceAtOrig, move.to)
+    this.chess.move(move)
+    console.log('turn now', this.chess.turn())
+    return true
   }
 
-  load(pgn: string){
-    this.chess.load_pgn(pgn);
+  load(pgn: string) {
+    this.chess.load_pgn(pgn)
   }
 
   setPiecesPositions(positions: PiecesPositions) {
-    this.piecePositions = positions;
-    this.piecePositionIndexedBySquare = setPiecesPositionsBySquare(positions);
+    this.piecePositions = positions
+    this.piecePositionIndexedBySquare = setPiecesPositionsBySquare(positions)
   }
   setPiecesHealth(healths: PiecesHealth) {
-    this.pieceHealth = healths;
+    this.pieceHealth = healths
   }
 
-  getTurn(){
-    return this.chess.turn();
+  getTurn() {
+    return this.chess.turn()
   }
 
   SQUARES() {
-    return this.chess.SQUARES; 
+    return this.chess.SQUARES
   }
 
-  moves(options: {
-    verbose: true;
-    square?: string | undefined}) {
-    return this.chess.moves(options);
+  moves(options: {verbose: true; square?: string | undefined}) {
+    return this.chess.moves(options)
   }
 
   swapTurn() {
-    const tokens = this.chess.fen().split(' ');
-    tokens[1] = this.chess.turn() === "b" ? "w" : "b";
+    console.group('swap turn now!')
+    console.log('current turn', this.chess.turn())
+    console.log('fen: ', this.chess.fen());
+    
+    const tokens = this.chess.fen().split(' ')
+    tokens[1] = this.chess.turn() === 'b' ? 'w' : 'b'
     //Without changing the en passant flag, the FEN can fail to load when white pushes a pawn two spaces and then black skips the turn.
-    tokens[3] = "-";
+    tokens[3] = '-'
     //if turn is w the full moves should be an even number as it updates after black moves.
-    tokens[5] = this.chess.turn() === 'b' ? (Number(tokens[5]) + 1).toString() : tokens[5] 
-    this.chess.load(tokens.join(' '));
+    tokens[5] =
+      this.chess.turn() === 'b' ? (Number(tokens[5]) + 1).toString() : tokens[5]
+    this.chess.load(tokens.join(' '))
+    console.log('new fen: ',tokens.join(' '))
+    console.log('new turn:', this.chess.turn());
+    console.groupEnd();
   }
 
   getHealth() {
-    return this.pieceHealth;
+    return this.pieceHealth
   }
 
   getPosition() {
     return this.piecePositions
   }
 
-  removePiece(piece: PiecesID){
-    const {[piece]: pieceToRemove, ...restPositions} = this.piecePositions;
-    this.setPiecesPositions(restPositions as PiecesPositions);
-    const {[piece]: healthToRemove, ...restHealth} = this.pieceHealth;
-    this.setPiecesHealth(restHealth as PiecesHealth);
-    this.piecePositionIndexedBySquare = setPiecesPositionsBySquare(restPositions as PiecesPositions);
+  removePiece(piece: PiecesID) {
+    const {[piece]: pieceToRemove, ...restPositions} = this.piecePositions
+    this.setPiecesPositions(restPositions as PiecesPositions)
+    const {[piece]: healthToRemove, ...restHealth} = this.pieceHealth
+    this.setPiecesHealth(restHealth as PiecesHealth)
+    this.piecePositionIndexedBySquare = setPiecesPositionsBySquare(
+      restPositions as PiecesPositions,
+    )
   }
 
-  updatePosition(piece:PiecesID, position: Square) {
-    const newPositions = {...this.piecePositions};
-    newPositions[piece] = position;
+  updatePosition(piece: PiecesID, position: Square) {
+    const newPositions = {...this.piecePositions}
+    newPositions[piece] = position
     this.setPiecesPositions(newPositions)
   }
 
-  updateHealth (piece: PiecesID, health: number) {
-    const newHealths = {...this.pieceHealth};
-    newHealths[piece] = health;
-    this.setPiecesHealth(newHealths);
+  updateHealth(piece: PiecesID, health: number) {
+    const newHealths = {...this.pieceHealth}
+    newHealths[piece] = health
+    this.setPiecesHealth(newHealths)
   }
 }
