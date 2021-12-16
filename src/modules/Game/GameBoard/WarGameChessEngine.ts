@@ -1,9 +1,9 @@
 import { pieceInitialHealthAndDamage } from "src/config";
-import { IndexPosition, PiecesHealth, PiecesID, PiecesPositions } from "src/types";
-import {Chess, ShortMove, Square} from 'chess.js';
-import { getPiecesDamage } from "src/utils";
+import { IndexPosition, PiecesHealth, PiecesID, PiecesPositions } from "src/modules/Game/types";
+import {ChessInstance, ShortMove, Square} from 'chess.js';
+import { getPiecesDamage, setPiecesPositionsBySquare } from "src/modules/Game/utils";
 
-class WarChessEngine extends Chess {
+export class WarChessEngine {
   private piecePositions : PiecesPositions =  {
     bR0: 'a8',
     bN0: 'b8',
@@ -73,31 +73,28 @@ class WarChessEngine extends Chess {
     wP7: pieceInitialHealthAndDamage.pawn.health,
   }
 
-  private piecePositionIndexedBySquare: IndexPosition;
+  private piecePositionIndexedBySquare: IndexPosition = setPiecesPositionsBySquare(this.piecePositions);
 
-  constructor(pgn?: string) {
-    super();
+  constructor(private chess : ChessInstance, pgn?: string) {
     if (pgn) {
-      this.load_pgn(pgn);
+      chess.load_pgn(pgn);
     }
-    this.piecePositionIndexedBySquare = this.setPiecesPositionsBySquare(this.piecePositions);
   }
 
-  private setPiecesPositionsBySquare(positions: PiecesPositions): IndexPosition {
-    return Object.keys(positions).reduce((sum, el) => {
-      return {
-        ...sum,
-        [positions[el as PiecesID]]: el,
-      }
-    }, {} as IndexPosition)
+  fen() {
+    return this.chess.fen()
+  }
+
+  turn() {
+    return this.chess.turn()
   }
   
-  onMove(move: ShortMove, options? : {sloppy? :boolean} | undefined): boolean {
-    const valid = this.move(move);
+  move(move: ShortMove, options? : {sloppy? :boolean} | undefined): boolean {
+    const valid = this.chess.move(move);
     if (!valid) {
       return false;
     } 
-    this.undo();
+    this.chess.undo();
 
     const pieceAtDest = this.piecePositionIndexedBySquare[move.to];
     const pieceAtOrig = this.piecePositionIndexedBySquare[move.from];
@@ -115,28 +112,31 @@ class WarChessEngine extends Chess {
 
     }
     this.updatePosition(pieceAtOrig, move.to);
-    this.move(move);
+    this.chess.move(move);
     return true;
 
   }
 
   setPiecesPositions(positions: PiecesPositions) {
     this.piecePositions = positions;
+    this.piecePositionIndexedBySquare = setPiecesPositionsBySquare(positions);
   }
   setPiecesHealth(healths: PiecesHealth) {
     this.pieceHealth = healths;
   }
 
   getTurn(){
-    return this.turn();
+    return this.chess.turn();
   }
 
   swapTurn() {
-    const tokens = this.fen().split(' ');
-    tokens[1] = this.turn() === "b" ? "w" : "b";
+    const tokens = this.chess.fen().split(' ');
+    tokens[1] = this.chess.turn() === "b" ? "w" : "b";
     //Without changing the en passant flag, the FEN can fail to load when white pushes a pawn two spaces and then black skips the turn.
     tokens[3] = "-";
-    this.load(tokens.join(' '));
+    //if turn is w the full moves should be an even number as it updates after black moves.
+    tokens[5] = this.chess.turn() === 'b' ? (Number(tokens[5]) + 1).toString() : tokens[5] 
+    this.chess.load(tokens.join(' '));
   }
 
   getHealth() {
@@ -152,7 +152,7 @@ class WarChessEngine extends Chess {
     this.setPiecesPositions(restPositions as PiecesPositions);
     const {[piece]: healthToRemove, ...restHealth} = this.pieceHealth;
     this.setPiecesHealth(restHealth as PiecesHealth);
-    this.piecePositionIndexedBySquare = this.setPiecesPositionsBySquare(restPositions as PiecesPositions);
+    this.piecePositionIndexedBySquare = setPiecesPositionsBySquare(restPositions as PiecesPositions);
   }
 
   updatePosition(piece:PiecesID, position: Square) {
@@ -168,11 +168,3 @@ class WarChessEngine extends Chess {
   }
 }
 
-let instance: WarChessEngine;
-
-export const getNewWargameEngine = (pgn?: string) => {
-  if (!instance) {
-    instance = new WarChessEngine(pgn);
-  } 
-  return instance;
-}

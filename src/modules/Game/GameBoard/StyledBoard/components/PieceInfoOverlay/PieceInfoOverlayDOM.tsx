@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { PiecesID } from 'src/types';
+import { PiecesID } from 'src/modules/Game/types';
 
 type Props = {
   piece: PiecesID;

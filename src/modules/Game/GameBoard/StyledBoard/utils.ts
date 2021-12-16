@@ -3,7 +3,7 @@ import { Api } from 'chessground/api'
 import {Color} from 'chessground/types'
 import { ChessgroundProps } from 'react-chessground'
 import {ChessInstance, getNewChessGame} from 'src/lib/chess/chess'
-import { CalcMovableProps, ChessBoardGameState, ChessColor, ChessColorBlack, ChessColorWhite, ChessDests, ChessMove } from 'src/types'
+import { CalcMovableProps, ChessBoardGameState, ChessColor, ChessColorBlack, ChessColorWhite, ChessDests, ChessMove } from 'src/modules/Game/types'
 
 export const noop = () => {}
 

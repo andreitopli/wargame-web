@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import 'react-chessground/dist/styles/chessground.css';
 import Chessground, { ChessgroundApi, ChessgroundProps } from 'react-chessground'
-import { ChessMove, PiecesID, PiecesListOfIds } from 'src/types'
+import { ChessMove, PiecesID, PiecesListOfIds } from 'src/modules/Game/types'
 import { PieceInfoOverlay } from './components/PieceInfoOverlay/PieceInfoOverlay'
 import { Color } from 'chessground/types'
 import { Square } from 'chess.js'

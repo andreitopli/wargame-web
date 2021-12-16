@@ -1,6 +1,6 @@
 import React from 'react'
 import {ChessBoardProps} from 'react-chessboard'
-import {Game} from 'src/types'
+import {Game} from 'src/modules/Game/types'
 import {GameBoard} from './GameBoard/GameBoard'
 
 type Props = Omit<

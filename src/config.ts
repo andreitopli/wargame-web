@@ -1,4 +1,4 @@
-import { PiecesHealthAndDamageDict } from "./types";
+import { PiecesHealthAndDamageDict } from "./modules/Game/types";
 
 export const pieceInitialHealthAndDamage : PiecesHealthAndDamageDict = {
   pawn: {

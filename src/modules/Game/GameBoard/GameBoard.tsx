@@ -9,7 +9,7 @@ import {
   PiecesHealth,
   PiecesID,
   PiecesPositions,
-} from 'src/types'
+} from 'src/modules/Game/types'
 import {StyledBoard, StyledBoardProps} from './StyledBoard/StyledBoard'
 import {otherChessColor, toChessColor, toDests} from './StyledBoard/utils'
 import {connect, MapDispatchToProps, MapStateToProps} from 'react-redux'
@@ -17,7 +17,7 @@ import {RootState} from 'src/reudx/reducers/reducer'
 import {updateHealth, updatePosition} from 'src/reudx/actions/pieces'
 import {AppDispatch} from 'src/reudx/Provider'
 import {addMove} from 'src/reudx/actions/game'
-import {getPiecesDamage} from 'src/utils'
+import {getPiecesDamage} from 'src/modules/Game/utils'
 
 export type ChessBoardProps = Omit<StyledBoardProps, 'onMove' | 'fen'> & {
   id: string
@@ -166,8 +166,6 @@ class GameBoardComponent extends React.PureComponent<ComponentProps, State> {
   render() {
     const {pgn, id, playable, orientation, homeColor, ...boardProps} =
       this.props
-
-      console.log('fen', this.state.current.fen)
 
     const chessState = this.state.current
 

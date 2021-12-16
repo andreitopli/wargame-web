@@ -1,5 +1,5 @@
 import { createReducer } from 'deox'
-import {PiecesPositions} from 'src/types'
+import {PiecesPositions} from 'src/modules/Game/types'
 import { updatePosition } from '../actions/pieces'
 
 const initialState: PiecesPositions = {

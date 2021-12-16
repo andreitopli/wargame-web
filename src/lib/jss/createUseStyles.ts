@@ -7,5 +7,5 @@ export function createUseStyles<Theme extends DefaultTheme, C extends string = s
   styles: Record<C, CSSProperties> | ((theme: Theme) => Record<C, CSSProperties>),
   options?: {}
 ): () => Classes<C> {
-  return createUseStylesJSS(styles as Styles<C> | ((theme: Theme) => Styles<C>), options);
+  return createUseStylesJSS(styles as Styles<C>, options);
 }

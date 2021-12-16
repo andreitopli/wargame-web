@@ -1,5 +1,5 @@
 import {createReducer} from 'deox'
-import {PiecesHealth} from 'src/types'
+import {PiecesHealth} from 'src/modules/Game/types'
 import {pieceInitialHealthAndDamage} from '../../config'
 import {dealDamage, updateHealth} from '../actions/pieces'
 
