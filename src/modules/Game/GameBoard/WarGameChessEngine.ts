@@ -1,7 +1,7 @@
 import { pieceInitialHealthAndDamage } from "src/config";
-import { IndexPosition, PiecesHealth, PiecesID, PiecesPositions } from "src/modules/Game/types";
+import { IndexPosition, PieceInitial, PiecesHealth, PiecesID, PiecesPositions } from "src/modules/Game/types";
 import {ChessInstance, ShortMove, Square} from 'chess.js';
-import { getPiecesDamage, setPiecesPositionsBySquare } from "src/modules/Game/utils";
+import { getPiecesDamage, pieceTypeToPieceName, setPiecesPositionsBySquare } from "src/modules/Game/utils";
 
 export class WarChessEngine {
   private piecePositions : PiecesPositions =  {
@@ -106,21 +106,30 @@ export class WarChessEngine {
 
     const pieceAtDest = this.piecePositionIndexedBySquare[move.to];
     const pieceAtOrig = this.piecePositionIndexedBySquare[move.from];
-    
+    console.log('piece at origin', pieceAtOrig)
     if (pieceAtDest) {
+      console.log('piece at dest', pieceAtDest)
+      console.log('health at destination', this.pieceHealth[pieceAtDest])
       const damage = getPiecesDamage(pieceAtOrig);
       const newHealth = this.pieceHealth[pieceAtDest] - damage;
-
+      console.log('damage',damage)
       if (newHealth > 0) {
         this.updateHealth(pieceAtDest, newHealth);
+        console.log('check if bishop, queen or rook and move accordingly', pieceAtOrig)
+        const originPieceType = pieceTypeToPieceName[pieceAtOrig.split('')[1].toLowerCase() as PieceInitial];
+        // if (originPieceType === 'bishop') {
+        //   const positionAtDest = this.piecePositions[pieceAtDest];
+        // }
         this.swapTurn();
+        console.log('applied damage, new health ', newHealth)
         return false;
       }
-
-
+      this.removePiece(pieceAtDest);
     }
     this.updatePosition(pieceAtOrig, move.to);
     this.chess.move(move);
+    console.log('new positions', this.getPosition());
+    console.log('new position for moved piece', this.getPosition()[pieceAtOrig]);
     return true;
 
   }

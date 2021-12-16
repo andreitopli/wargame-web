@@ -26,7 +26,7 @@ export const StyledBoard: React.FC<StyledBoardProps> = ({
   
   useEffect(() => {
     setOverlays(Object.keys(PiecesListOfIds).map(piece => (
-      <PieceInfoOverlay piece={piece as PiecesID}/>
+      <PieceInfoOverlay key={piece} piece={piece as PiecesID}/>
     )))
   },[])
 
