@@ -13,6 +13,7 @@ import {
   pieceTypeToPieceName,
   setPiecesPositionsBySquare,
 } from 'src/modules/Game/utils'
+import {MoveType} from 'chessground/types'
 
 export class WarChessEngine {
   private piecePositions: PiecesPositions = {
@@ -109,7 +110,11 @@ export class WarChessEngine {
     return this.chess.turn()
   }
 
-  move(move: ShortMove, options?: {sloppy?: boolean} | undefined): boolean {
+  move(
+    move: ShortMove,
+    type: MoveType,
+    options?: {sloppy?: boolean} | undefined,
+  ): boolean {
     const valid = this.chess.move(move)
     if (!valid) {
       return false
@@ -122,17 +127,26 @@ export class WarChessEngine {
       const damage = getPiecesDamage(pieceAtOrig)
       const newHealth = this.pieceHealth[pieceAtDest] - damage
 
+      const originPieceType =
+        pieceTypeToPieceName[
+          pieceAtOrig.split('')[1].toLowerCase() as PieceInitial
+        ]
+
       if (newHealth > 0) {
-        console.log('health > 0 so dealing damage')
-        const originPieceType =
-          pieceTypeToPieceName[
-            pieceAtOrig.split('')[1].toLowerCase() as PieceInitial
-          ]
+        console.log('health > 0 --> ')
+        // For King, Pawn and Knight - keep position and deal damage
         if (
-          originPieceType === 'bishop' ||
-          originPieceType === 'rook' ||
-          originPieceType === 'queen'
+          originPieceType === 'king' ||
+          originPieceType === 'pawn' ||
+          originPieceType === 'knight'
         ) {
+          this.updateHealth(pieceAtDest, newHealth)
+          this.swapTurn()
+          return false
+        }
+
+        // For Bishop, Queen and Rook - deal damage and move adjecent - only if square is farther than the near one
+        if (type === 'melee') {
           const positionToMove = getAdjecentPosition(
             this.piecePositions,
             pieceAtOrig,
@@ -145,33 +159,49 @@ export class WarChessEngine {
               to: positionToMove,
             }
             console.log('move', moveAdj)
-            console.log('old fen', this.chess.fen())
             this.chess.move(moveAdj, {sloppy: true})
             this.updatePosition(pieceAtOrig, positionToMove)
             this.updateHealth(pieceAtDest, newHealth)
-            console.log('new fen', this.chess.fen())
-            console.log('turn now', this.chess.turn())
             return true
           }
-          this.updateHealth(pieceAtDest, newHealth)
-          this.swapTurn()
-          console.log('new fen', this.chess.fen())
-          console.log('turn now', this.chess.turn())
-          return false
         }
-
-        console.log('deal damage and swap turn')
+        console.log(
+          'piece is nearby so cant move adjecent, keep position and just deal damage - same for melee or range',
+        )
         this.updateHealth(pieceAtDest, newHealth)
         this.swapTurn()
-        console.log('turn now', this.chess.turn())
         return false
       }
+
+      //New health < 0
+
+      //For King, Pawn and Knight - move normally
+      if (
+        originPieceType === 'pawn' ||
+        originPieceType === 'king' ||
+        originPieceType === 'knight'
+      ) {
+        this.updatePosition(pieceAtOrig, move.to)
+        this.removePiece(pieceAtDest)
+        this.chess.move(move)
+        return true
+      }
+
+      //For Queen, Bishop and Rook - melee move normally and range just take the piece out
+      if (type === 'melee') {
+        this.updatePosition(pieceAtOrig, move.to)
+        this.removePiece(pieceAtDest)
+        this.chess.move(move)
+        return true
+      }
       this.removePiece(pieceAtDest)
+      this.chess.remove(move.to)
+      return false
     }
-    console.log('just move')
+    // Empty square at dest
+    console.log('empty square at dest, just move')
     this.updatePosition(pieceAtOrig, move.to)
     this.chess.move(move)
-    console.log('turn now', this.chess.turn())
     return true
   }
 

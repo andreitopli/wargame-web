@@ -1,5 +1,5 @@
 import {ShortMove} from 'chess.js'
-import {Color} from 'chessground/types'
+import {Color, MoveType} from 'chessground/types'
 import React, {useEffect, useState} from 'react'
 import {getNewChessGame} from 'src/lib/chess/chess'
 import { Pubsy } from 'src/lib/Pubsy'
@@ -9,7 +9,7 @@ import {WarChessEngine} from '../WarGameChessEngine'
 
 export type EngineContextProps =
   | {
-      onMove: (move: ShortMove) => void
+      onMove: (move: ShortMove, type: MoveType) => void
       getPositions: () => PiecesPositions
       getHealth: () => PiecesHealth
       getFen: () => string
@@ -58,8 +58,8 @@ export const EngineProvider: React.FC<Props> = (props) => {
     setContextValue(() => {
       const engine = new WarChessEngine(getNewChessGame())
       return {
-        onMove: (move: ShortMove) => {
-          engine.move(move)
+        onMove: (move: ShortMove, type: MoveType) => {
+          engine.move(move, type)
           setGame((prev) => ({
             ...prev,
             pgn: engine.pgn(),

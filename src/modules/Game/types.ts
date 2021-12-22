@@ -155,3 +155,5 @@ export type InitialToPieceName = {
 export type IndexPosition = {
   [k in Square]: PiecesID
 }
+
+export type MoveType = 'range' | 'melee'

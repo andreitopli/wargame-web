@@ -13,7 +13,7 @@ describe('wargame engine test', () => {
       to: 'd4',
       from: 'd2',
     }
-    warGameEngine.move(moveWhite)
+    warGameEngine.move(moveWhite, 'melee')
     expect(warGameEngine.fen()).toEqual(
       'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1',
     )
@@ -23,7 +23,7 @@ describe('wargame engine test', () => {
       to: 'e5',
       from: 'e7',
     }
-    warGameEngine.move(moveBlack)
+    warGameEngine.move(moveBlack,'melee')
     expect(warGameEngine.fen()).toEqual(
       'rnbqkbnr/pppp1ppp/8/4p3/3P4/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 2',
     )
@@ -40,12 +40,12 @@ describe('wargame engine test', () => {
       to: 'd4',
       from: 'd2',
     }
-    warGameEngine.move(moveWhite)
+    warGameEngine.move(moveWhite, 'melee')
     const moveBlack: ShortMove = {
       to: 'e5',
       from: 'e7',
     }
-    warGameEngine.move(moveBlack)
+    warGameEngine.move(moveBlack, 'melee')
 
     expect(warGameEngine.fen()).toBe('rnbqkbnr/pppp1ppp/8/4p3/3P4/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 2');
     expect(warGameEngine.turn()).toBe('w');
@@ -58,7 +58,7 @@ describe('wargame engine test', () => {
       to: 'e5',
     }
 
-    const meleeHitMove = warGameEngine.move(move)
+    warGameEngine.move(move, 'melee')
 
     expect(warGameEngine.getPosition()['wP3']).toBe('d4')
     expect(warGameEngine.getPosition()['bP4']).toBe('e5')
@@ -77,7 +77,7 @@ describe('wargame engine test', () => {
       to: 'd4'
     }
 
-    const meleeReverseMove = warGameEngine.move(reverseMove);
+    warGameEngine.move(reverseMove, 'melee');
 
     expect(warGameEngine.getPosition()['wP3']).toBe('d4')
     expect(warGameEngine.getPosition()['bP4']).toBe('e5')
@@ -100,7 +100,7 @@ describe('wargame engine test', () => {
       from: 'd7',
       to: 'd6'
     }
-    const valid = warGameEngine.move(move);
+    const valid = warGameEngine.move(move, 'melee');
     expect(warGameEngine.fen()).toBe('rnbqkbnr/ppp1pppp/3p4/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 2');
     expect(valid).toBeTruthy()
   })

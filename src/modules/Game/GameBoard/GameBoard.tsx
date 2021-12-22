@@ -46,7 +46,7 @@ export const GameBoard: React.FC<ChessBoardProps> = (props) => {
           check={engine.inCheck()}
           movable={calcMovable()}
           orientation={props.orientation || 'white'}
-          onMove={(move) => engine.onMove(move)}
+          onMove={(move, type) => engine.onMove(move, type)}
         />
       </>
     )

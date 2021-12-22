@@ -1,6 +1,6 @@
 declare module 'react-chessground' {
   import * as React from 'react';
-  import { Key, Piece } from 'chessground/types';
+  import { Key, MoveType, Piece } from 'chessground/types';
   import { Chessground as NativeChessground } from 'chessground';
 
   type Config = NonNullable<Parameters<typeof NativeChessground>[1]>;
@@ -14,9 +14,11 @@ declare module 'react-chessground' {
     className?: string;
 
     onChange?: () => void;
-    onMove?: (orig: Key, dest: Key, capturedPiece?: Piece) => void;
+    onMove?: (orig: Key, dest: Key, type: MoveType, capturedPiece?: Piece) => void;
     onDropNewPiece?: (piece: Piece, key: Key) => void;
     onSelect?: (key: Key) => void;
+    onDrag?: (orig: Key) => void;
+    onDrop?: () => void;
   }
 
   export default class Chessground extends React.Component<ChessgroundProps> {}

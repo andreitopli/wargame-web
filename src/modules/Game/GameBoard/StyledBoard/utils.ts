@@ -43,7 +43,7 @@ export function toDests(chess: WarChessEngine): ChessDests {
 
 export function playOtherSide(cg: Api, chess: WarChessEngine) {
   return (orig : Square, dest : Square) => {
-    chess.move({from: orig, to: dest});
+    chess.move({from: orig, to: dest}, 'melee');
     cg.set({
       turnColor: toColor(chess),
       movable: {

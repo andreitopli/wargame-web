@@ -3228,7 +3228,7 @@ check-types@^11.1.1:
 
 "chessground@https://github.com/andreitopli/chessground.git":
   version "8.1.7"
-  resolved "https://github.com/andreitopli/chessground.git#cc61e5fe187be24f783425b23f676950cab629bd"
+  resolved "https://github.com/andreitopli/chessground.git#277f4a963b7ef904afa037e73cf77e126fba5c53"
 
 chokidar@^2.1.8:
   version "2.1.8"
@@ -9313,7 +9313,7 @@ react-chess-pieces@^1.0.5:
 
 "react-chessground@https://github.com/andreitopli/react-chessground.git":
   version "1.5.0"
-  resolved "https://github.com/andreitopli/react-chessground.git#ef35fb2f9a14f26676f91c9f0244a95bdab45f6a"
+  resolved "https://github.com/andreitopli/react-chessground.git#5763d1b15f4c150918886b433c5f9f3dc93f0fdc"
   dependencies:
     chessground "https://github.com/andreitopli/chessground.git"
 
