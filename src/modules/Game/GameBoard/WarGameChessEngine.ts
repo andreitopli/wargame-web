@@ -102,10 +102,6 @@ export class WarChessEngine {
     return this.chess.pgn()
   }
 
-  in_check() {
-    return this.chess.in_check()
-  }
-
   turn() {
     return this.chess.turn()
   }
@@ -225,8 +221,8 @@ export class WarChessEngine {
     return this.chess.SQUARES
   }
 
-  moves(options: {verbose: true; square?: string | undefined}) {
-    return this.chess.moves(options)
+  moves(options: {verbose: true; square?: string | undefined}, type: MoveType) {
+    return this.chess.moves(options, type)
   }
 
   swapTurn() {

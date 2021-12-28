@@ -1,6 +1,6 @@
 import { Square } from 'chess.js'
 import { Api } from 'chessground/api'
-import {Color} from 'chessground/types'
+import {Color, MoveType} from 'chessground/types'
 import {ChessInstance, getNewChessGame} from 'src/lib/chess/chess'
 import { ChessColor, ChessColorBlack, ChessColorWhite, ChessDests } from 'src/modules/Game/types'
 import { WarChessEngine } from '../WarGameChessEngine'
@@ -28,10 +28,10 @@ export function otherChessColor<C extends ChessColor>(c: C) {
   return c === 'white' ? 'black' : 'white';
 }
 
-export function toDests(chess: WarChessEngine): ChessDests {
+export function toDests(chess: WarChessEngine, type: MoveType): ChessDests {
   const dests = new Map()
   chess.SQUARES().forEach((s) => {
-    const ms = chess.moves({square: s, verbose: true})
+    const ms = chess.moves({square: s, verbose: true},type)
     if (ms.length)
       dests.set(
         s,
@@ -48,7 +48,8 @@ export function playOtherSide(cg: Api, chess: WarChessEngine) {
       turnColor: toColor(chess),
       movable: {
         color: toColor(chess),
-        dests: toDests(chess)
+        meleeDests: toDests(chess, 'melee'),
+        rangeDests: toDests(chess, 'range')
       }
     });
   };

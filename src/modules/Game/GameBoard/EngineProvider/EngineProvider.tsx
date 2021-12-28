@@ -14,7 +14,6 @@ export type EngineContextProps =
       getHealth: () => PiecesHealth
       getFen: () => string
       getTurn: () => Color
-      inCheck: () => boolean
       getEngine: () => WarChessEngine
       onUpdate: (fn : (data: {health: PiecesHealth}) => void) => void;
     }
@@ -83,9 +82,6 @@ export const EngineProvider: React.FC<Props> = (props) => {
         },
         getHealth: () => {
           return engine.getHealth()
-        },
-        inCheck: () => {
-          return engine.in_check()
         },
         onUpdate: (fn : (data: {health: PiecesHealth}) => void) => {
           pubsy.subscribe('updateOverlays', fn)
