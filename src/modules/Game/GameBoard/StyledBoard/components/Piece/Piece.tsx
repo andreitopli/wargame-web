@@ -66,7 +66,6 @@ export const Piece: React.FC<Props> = (props) => {
     if (!pieceKeyID.current){
       pieceKeyID.current = containerRef.current?.parentElement?.className as string;
     }
-    console.log('piece id ', props.id)
   },[])
 
   return (

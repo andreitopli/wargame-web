@@ -1,6 +1,6 @@
 import { Square } from "chess.js";
 import { createAction } from "deox";
-import { PiecesID } from "src/modules/Game/types";
+import { PiecesHealth, PiecesID } from "src/modules/Game/types";
 
 export const dealDamage = createAction('dealDamage', 
 (resolve) => (p: {
@@ -10,8 +10,7 @@ export const dealDamage = createAction('dealDamage',
 
 export const updateHealth = createAction('updateHealth',
 (resolve) => (p: {
-  health: number;
-  piece:PiecesID
+  health: PiecesHealth;
 }) => resolve(p));
 
 export const updatePosition = createAction('updatePosition',

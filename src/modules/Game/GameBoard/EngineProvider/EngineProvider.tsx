@@ -1,8 +1,10 @@
 import {ShortMove} from 'chess.js'
 import {Color, MoveType} from 'chessground/types'
 import React, {useEffect, useState} from 'react'
+import { useDispatch } from 'react-redux'
 import {getNewChessGame} from 'src/lib/chess/chess'
 import { Pubsy } from 'src/lib/Pubsy'
+import { updateHealth } from 'src/reudx/actions/pieces'
 import {Game, PiecesHealth, PiecesPositions} from '../../types'
 import {otherChessColor, toChessColor} from '../StyledBoard/utils'
 import {WarChessEngine} from '../WarGameChessEngine'
@@ -21,7 +23,7 @@ export type EngineContextProps =
 
 export const EngineContext = React.createContext<EngineContextProps>(undefined)
 
-function createNewGame(): Game {
+export function createNewGame(): Game {
   const chess = getNewChessGame()
   return {
     pgn: chess.pgn(),
@@ -52,6 +54,7 @@ type Props = {
 export const EngineProvider: React.FC<Props> = (props) => {
   const [contextValue, setContextValue] = useState<EngineContextProps>()
   const [game, setGame] = useState<Game>(createNewGame())
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setContextValue(() => {
@@ -66,7 +69,7 @@ export const EngineProvider: React.FC<Props> = (props) => {
             lastMoveBy: otherChessColor(toChessColor(engine.turn())),
             turn: toChessColor(engine.turn()),
           }))
-          pubsy.publish('updateOverlays', {health: engine.getHealth()})
+          dispatch(updateHealth({health: engine.getHealth()}))
         },
         getEngine: () => {
           return engine
@@ -88,6 +91,7 @@ export const EngineProvider: React.FC<Props> = (props) => {
         }
       }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

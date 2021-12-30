@@ -14,6 +14,9 @@ export class PieceInfoOverlayDOM extends React.Component<Props> {
     super(props);
     this.overlayRoot = document.getElementById(props.piece);
     this.el = document.createElement('div');
+    this.el.style.width= '100%';
+    this.el.style.height = '100%';
+    this.el.style.position = 'relative';
   }
 
   componentDidMount() {

@@ -1,5 +1,4 @@
 import { Pubsy } from '..';
-import { delay } from '../../time';
 
 type GenericChannelTypesMap = {[k: string]: any}
 let pubsy: Pubsy<GenericChannelTypesMap>;
@@ -60,7 +59,7 @@ describe('On Demand', () => {
 
     pubsy.subscribe('myEvent', spy);
 
-    await delay(20);
+    // await delay(20);
     
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(2);

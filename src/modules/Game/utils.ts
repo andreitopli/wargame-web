@@ -84,24 +84,17 @@ export function getAdjecentPosition(
 ): Square {
   const positionAtOrigin = getNumbericalPosition(positions[orig])
   const positionAtDest = getNumbericalPosition(positions[dest])
-  // console.log('position at destination', positionAtDest)
-  // console.log('position at origin for bishop', positionAtOrigin)
   const diffCol = positionAtDest.col - positionAtOrigin.col
   const diffRow = positionAtDest.row - positionAtOrigin.row
-  // console.log('diff row', diffRow, 'diff col', diffCol)
   const direction: {col: number; row: number} = {
     col: diffCol > 0 ? 1 : diffCol < 0 ? -1 : 0,
     row: diffRow > 0 ? 1 : diffRow < 0 ? -1 : 0,
   }
-  // console.log('direction', direction)
   const steps = Math.abs(Math.max(Math.abs(diffRow), Math.abs(diffCol))) - 1
-  // console.log('steps', steps)
   const newPosition = {
     col: positionAtOrigin.col + direction.col * steps,
     row: positionAtOrigin.row + direction.row * steps,
   }
-  // console.log('new position', newPosition)
   const positionToMove = getSquareFromNumbericalPosition(newPosition)
-  // console.log('position to move for bisop', positionToMove)
   return positionToMove
 }

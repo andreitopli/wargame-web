@@ -1,4 +1,5 @@
 import {useEffect} from 'react'
+import {createGenerateId, JssProvider} from 'react-jss'
 import './App.css'
 import {MainGame} from './modules/Game/MainGame'
 
@@ -10,9 +11,15 @@ function App() {
     // dispatch(setupGame());
   }, [])
 
+  const generateId = createGenerateId();
+
   return (
     <div className="App">
-      <MainGame boardOrientation="white" />
+      <JssProvider 
+          generateId={generateId}
+          id={{ minify: true }}>
+        <MainGame boardOrientation="white" />
+      </JssProvider>
     </div>
   )
 }

@@ -1680,6 +1680,13 @@
   resolved "https://registry.yarnpkg.com/@types/chess.js/-/chess.js-0.11.2.tgz#e5d5f502b38f24efe854572ee33a939e1e395005"
   integrity sha512-ZgT0f5Dm1x+kjA/RhCQpBM2NoUGkdk9JFdwncW7/GdqzHCOkLsOTq4k/EKRiRTCFLXR4fTKk8j7KNOmzzHQVgg==
 
+"@types/classnames@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-2.3.1.tgz#3c2467aa0f1a93f1f021e3b9bcf938bd5dfdc0dd"
+  integrity sha512-zeOWb0JGBoVmlQoznvqXbE0tEC/HONsnoUNH19Hc96NFsTAwTXbTqb8FMYkru1F/iqp7a18Ws3nWJvtA1sHD1A==
+  dependencies:
+    classnames "*"
+
 "@types/eslint@^7.28.2":
   version "7.29.0"
   resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.29.0.tgz#e56ddc8e542815272720bb0b4ccc2aff9c3e1c78"
@@ -3228,7 +3235,7 @@ check-types@^11.1.1:
 
 "chessground@https://github.com/andreitopli/chessground.git":
   version "8.1.7"
-  resolved "https://github.com/andreitopli/chessground.git#159a827ae899d209a943ae67ce59fcda25052ec4"
+  resolved "https://github.com/andreitopli/chessground.git#9f97ab8e9e8119142902102b706bc6867b4a6272"
 
 chokidar@^2.1.8:
   version "2.1.8"
@@ -3306,6 +3313,11 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+classnames@*, classnames@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
+  integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
 
 clean-css@^4.2.3:
   version "4.2.4"
@@ -9297,7 +9309,7 @@ react-chess-pieces@^1.0.5:
 
 "react-chessground@https://github.com/andreitopli/react-chessground.git":
   version "1.5.0"
-  resolved "https://github.com/andreitopli/react-chessground.git#bf5db314b2eb07aa9d92b8616b0db9d264bde396"
+  resolved "https://github.com/andreitopli/react-chessground.git#f0c3a8d41589972efa5e072a9e3b6c683a0ae094"
   dependencies:
     chessground "https://github.com/andreitopli/chessground.git"
 

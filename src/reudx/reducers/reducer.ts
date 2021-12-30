@@ -1,11 +1,9 @@
 import { combineReducers } from "redux-starter-kit";
-import {reducer as healthReducer} from './piecesHealth';
-import {reducer as positionReducer} from './piecesPositions';
+import {reducer as piecesReducer} from './piecesReducer';
 import {reducer as gameReducer} from './gameReducer';
 
 export const reducer = combineReducers({
-  health: healthReducer,
-  position: positionReducer,
+  pieces: piecesReducer,
   game: gameReducer
 })
 

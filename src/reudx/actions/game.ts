@@ -1,11 +1,6 @@
-import { ShortMove } from "chess.js";
 import { createAction } from "deox";
+import { Game } from "src/modules/Game/types";
 
-export const setupGame = createAction('initGame');
+export const newGame = createAction('newGame');
 
-export const addMove = createAction('addMove', 
-(resolve) => (p : {move: ShortMove}) => resolve(p))
-
-export const swapTurn = createAction('swapTurn');
-
-export const undoMove = createAction('undoMove');
+export const updateGame = createAction('updateGame', (resolve) => (p: {game: Game}) => resolve(p))
