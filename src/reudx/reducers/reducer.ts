@@ -1,10 +1,10 @@
 import { combineReducers } from "redux-starter-kit";
-import {reducer as piecesReducer} from './piecesReducer';
-import {reducer as gameReducer} from './gameReducer';
+import {stateSliceByKey as piecesReducer} from './piecesReducer';
+import {stateSliceByKey as gameReducer} from './gameReducer';
 
 export const reducer = combineReducers({
-  pieces: piecesReducer,
-  game: gameReducer
+  ...piecesReducer,
+  ...gameReducer
 })
 
 export type RootState = ReturnType<typeof reducer>;

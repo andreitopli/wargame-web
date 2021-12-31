@@ -2,7 +2,9 @@ import {createReducer} from 'deox'
 import {PiecesHealth, PiecesPositions} from 'src/modules/Game/types'
 import {pieceInitialHealthAndDamage} from '../../config'
 import {dealDamage, updateHealth, updatePosition} from '../actions/pieces'
-
+import { GenericStateSlice } from '../types'
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import { persistReducer } from 'redux-persist';
 
 type State = {
   positions: PiecesPositions;
@@ -80,7 +82,7 @@ const state: State = {
   }
 }
 
-export const reducer = createReducer(
+const reducer = createReducer(
   state as State,
   (handleAction) => [
     handleAction(dealDamage, (state, {payload}) => {
@@ -112,3 +114,20 @@ export const reducer = createReducer(
     }),
   ],
 )
+
+const stateSliceByKeyWithoutPersist = {
+  pieces: reducer,
+};
+
+export const stateSliceByKey = {
+  pieces: persistReducer(
+    {
+      key: 'pieces',
+      storage,
+    },
+    reducer
+  ),
+};
+
+export type ModuleState = ReturnType<typeof reducer>;
+export type ModuleStateSlice = GenericStateSlice<typeof stateSliceByKeyWithoutPersist, typeof reducer>;

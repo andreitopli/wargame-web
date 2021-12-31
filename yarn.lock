@@ -1858,6 +1858,13 @@
   dependencies:
     redux "^4.0.0"
 
+"@types/redux-persist@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@types/redux-persist/-/redux-persist-4.3.1.tgz#aa4c876859e0bea5155e5f7980e5b8c4699dc2e6"
+  integrity sha1-qkyHaFngvqUVXl95gOW4xGmdwuY=
+  dependencies:
+    redux-persist "*"
+
 "@types/resolve@0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-0.0.8.tgz#f26074d238e02659e323ce1a13d041eee280e194"
@@ -9309,7 +9316,7 @@ react-chess-pieces@^1.0.5:
 
 "react-chessground@https://github.com/andreitopli/react-chessground.git":
   version "1.5.0"
-  resolved "https://github.com/andreitopli/react-chessground.git#f0c3a8d41589972efa5e072a9e3b6c683a0ae094"
+  resolved "https://github.com/andreitopli/react-chessground.git#249c481fd659cc2755ab7adfbe4fd40b5a8cf4f5"
   dependencies:
     chessground "https://github.com/andreitopli/chessground.git"
 
@@ -9627,6 +9634,11 @@ redux-logger@^3.0.6:
   integrity sha1-91VZZvMJjzyIYExEnPC69XeCdL8=
   dependencies:
     deep-diff "^0.3.5"
+
+redux-persist@*, redux-persist@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-6.0.0.tgz#b4d2972f9859597c130d40d4b146fecdab51b3a8"
+  integrity sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==
 
 redux-starter-kit@0.5.1:
   version "0.5.1"

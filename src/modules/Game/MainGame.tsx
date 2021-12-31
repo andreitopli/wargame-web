@@ -13,7 +13,7 @@ export const MainGame: React.FC<Props> = (props) => {
       render={(game) => (
         <GameBoard
           canInteract
-          size={500}
+          size={600}
           game={game}
           playable
           homeColor={'white'}
