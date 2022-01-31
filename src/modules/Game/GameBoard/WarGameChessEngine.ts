@@ -1,6 +1,7 @@
 import {pieceInitialHealthAndDamage} from 'src/config'
 import {
   IndexPosition,
+  MovableDests,
   PieceInitial,
   PiecesHealth,
   PiecesID,
@@ -9,11 +10,55 @@ import {
 import {ChessInstance, ShortMove, Square} from 'chess.js'
 import {
   getAdjecentPosition,
+  getIfPieceInbetweenOrigAndDest,
   getPiecesDamage,
   pieceTypeToPieceName,
   setPiecesPositionsBySquare,
 } from 'src/modules/Game/utils'
 import {MoveType} from 'chessground/types'
+import {toChessColor} from './StyledBoard/utils'
+import { Pubsy } from 'src/lib/Pubsy'
+
+type Rooks = 'wR1' | 'wR0' | 'bR0' | 'bR1'
+
+type UpdateEvents = {
+  onUpdateHealth: undefined;
+}
+
+const piecesInitialPositions: PiecesPositions = {
+  bR0: 'a8',
+  bN0: 'b8',
+  bB0: 'c8',
+  bQ0: 'd8',
+  bK0: 'e8',
+  bB1: 'f8',
+  bN1: 'g8',
+  bR1: 'h8',
+  bP0: 'a7',
+  bP1: 'b7',
+  bP2: 'c7',
+  bP3: 'd7',
+  bP4: 'e7',
+  bP5: 'f7',
+  bP6: 'g7',
+  bP7: 'h7',
+  wR0: 'a1',
+  wN0: 'b1',
+  wB0: 'c1',
+  wQ0: 'd1',
+  wK0: 'e1',
+  wB1: 'f1',
+  wN1: 'g1',
+  wR1: 'h1',
+  wP0: 'a2',
+  wP1: 'b2',
+  wP2: 'c2',
+  wP3: 'd2',
+  wP4: 'e2',
+  wP5: 'f2',
+  wP6: 'g2',
+  wP7: 'h2',
+}
 
 export class WarChessEngine {
   private piecePositions: PiecesPositions = {
@@ -50,6 +95,13 @@ export class WarChessEngine {
     wP6: 'g2',
     wP7: 'h2',
   }
+  private rooksMoved: {[k in Rooks]: boolean} = {
+    wR0: false,
+    wR1: false,
+    bR0: false,
+    bR1: false,
+  }
+
   private pieceHealth: PiecesHealth = {
     bR0: pieceInitialHealthAndDamage.rook.health,
     bN0: pieceInitialHealthAndDamage.knight.health,
@@ -85,6 +137,8 @@ export class WarChessEngine {
     wP7: pieceInitialHealthAndDamage.pawn.health,
   }
 
+  private pubsy = new Pubsy<UpdateEvents>();
+
   private piecePositionIndexedBySquare: IndexPosition =
     setPiecesPositionsBySquare(this.piecePositions)
 
@@ -111,7 +165,7 @@ export class WarChessEngine {
     type: MoveType,
     options?: {sloppy?: boolean} | undefined,
   ): boolean {
-    const valid = this.chess.move(move)
+    const valid = this.chess.move(move, {}, type)
     if (!valid) {
       return false
     }
@@ -128,8 +182,8 @@ export class WarChessEngine {
           pieceAtOrig.split('')[1].toLowerCase() as PieceInitial
         ]
 
+      //DEALING DAMAGE
       if (newHealth > 0) {
-        console.log('health > 0 --> ')
         // For King, Pawn and Knight - keep position and deal damage
         if (
           originPieceType === 'king' ||
@@ -154,22 +208,31 @@ export class WarChessEngine {
               from: move.from,
               to: positionToMove,
             }
-            console.log('move', moveAdj)
-            this.chess.move(moveAdj, {sloppy: true})
+            this.chess.move(moveAdj, {sloppy: true}, 'melee')
+            if (pieceAtOrig in this.rooksMoved) {
+              this.rooksMoved[pieceAtOrig as Rooks] = true
+              console.log('PIECE IS ROOK!', this.rooksMoved);
+            }
             this.updatePosition(pieceAtOrig, positionToMove)
             this.updateHealth(pieceAtDest, newHealth)
             return true
           }
         }
-        console.log(
-          'piece is nearby so cant move adjecent, keep position and just deal damage - same for melee or range',
-        )
+
+        // Range
+        //Queen and Bishop and Rook
         this.updateHealth(pieceAtDest, newHealth)
         this.swapTurn()
+        if (pieceAtOrig in this.rooksMoved) {
+          if (this.rooksMoved[pieceAtOrig as Rooks]){
+            this.rooksMoved[pieceAtOrig as Rooks] = false
+          }
+          console.log('PIECE IS ROOK!', this.rooksMoved);
+        }
         return false
       }
 
-      //New health < 0
+      //New health < 0 - CAPTURE MOVE
 
       //For King, Pawn and Knight - move normally
       if (
@@ -179,7 +242,7 @@ export class WarChessEngine {
       ) {
         this.updatePosition(pieceAtOrig, move.to)
         this.removePiece(pieceAtDest)
-        this.chess.move(move)
+        this.chess.move(move, {}, 'melee')
         return true
       }
 
@@ -187,18 +250,85 @@ export class WarChessEngine {
       if (type === 'melee') {
         this.updatePosition(pieceAtOrig, move.to)
         this.removePiece(pieceAtDest)
-        this.chess.move(move)
+        this.chess.move(move, {}, 'melee')
+        if (pieceAtOrig in this.rooksMoved) {
+          this.rooksMoved[pieceAtOrig as Rooks] = true
+          console.log('PIECE IS ROOK!',this.rooksMoved);
+        }
         return true
       }
       this.removePiece(pieceAtDest)
       this.chess.remove(move.to)
+      if (pieceAtOrig in this.rooksMoved) {
+        if (this.rooksMoved[pieceAtOrig as Rooks]) {
+          this.rooksMoved[pieceAtOrig as Rooks] = false
+        }
+        console.log('PIECE IS ROOK!', this.rooksMoved);
+      }
       return false
     }
     // Empty square at dest
-    console.log('empty square at dest, just move')
     this.updatePosition(pieceAtOrig, move.to)
-    this.chess.move(move)
+    this.chess.move(move, {}, 'melee')
+    if (pieceAtOrig in this.rooksMoved) {
+      console.log('PIECE IS ROOK!', this.rooksMoved);
+      this.rooksMoved[pieceAtOrig as Rooks] = true
+    }
     return true
+  }
+
+  dests(): MovableDests {
+    const rangeDests = new Map()
+    const meleeDests = new Map()
+    console.log('CALCULATING NEW DESTS!')
+    this.SQUARES().forEach((s) => {
+      const msRange = this.chess.moves({square: s, verbose: true}, 'range')
+      const filterRookMoves = msRange.filter((move) => {
+        //if it's a rook and it's a CAPTURE move, otherwise skip this check and return the moves
+        if (move.piece === 'r' && 'captured' in move) {
+          //first check if any piece in between them, otherwise it's a normal attack 
+          if (
+                getIfPieceInbetweenOrigAndDest(
+                  this.piecePositions,
+                  this.piecePositionIndexedBySquare[move.from],
+                  this.piecePositionIndexedBySquare[move.to]
+          )) {
+            //check if the attacked piece has moved before. if it's still in initial position it cannot be attacked!
+            if (this.piecePositionIndexedBySquare[move.to] === setPiecesPositionsBySquare(piecesInitialPositions)[move.to]) {
+              return false
+            }
+            //check if the rook has moved before. if it has moved, it must hold position so it cannot attack over a piece
+            if (this.rooksMoved[this.piecePositionIndexedBySquare[move.from] as Rooks]) {
+              return false
+            }
+          }
+          return true;
+        }
+        return true
+      }).map((m) => m.to)
+      if (filterRookMoves.length)
+      rangeDests.set(
+        s,
+        filterRookMoves
+        )
+      const msMelee = this.chess.moves({square: s, verbose: true}, 'melee')
+      if (msMelee.length)
+        meleeDests.set(
+          s,
+          msMelee.map((m) => m.to),
+        )
+    })
+    return {
+      free: false,
+      showDests: true,
+      color: toChessColor(this.getTurn()),
+      rangeDests,
+      meleeDests,
+    }
+  }
+
+  history() {
+    return this.chess.history({verbose: true})
   }
 
   load(pgn: string) {
@@ -211,6 +341,7 @@ export class WarChessEngine {
   }
   setPiecesHealth(healths: PiecesHealth) {
     this.pieceHealth = healths
+    this.pubsy.publish('onUpdateHealth', undefined);
   }
 
   getTurn() {
@@ -247,6 +378,10 @@ export class WarChessEngine {
     return this.pieceHealth
   }
 
+  moveRook(piece: Rooks) {
+    this.rooksMoved[piece] = true
+  }
+
   getPosition() {
     return this.piecePositions
   }
@@ -271,5 +406,9 @@ export class WarChessEngine {
     const newHealths = {...this.pieceHealth}
     newHealths[piece] = health
     this.setPiecesHealth(newHealths)
+  }
+
+  onHealthUpdate(fn : () => void) {
+    this.pubsy.subscribe('onUpdateHealth', fn)
   }
 }

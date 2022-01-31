@@ -157,3 +157,11 @@ export type IndexPosition = {
 }
 
 export type MoveType = 'range' | 'melee'
+
+export type MovableDests = {
+  free? :boolean;
+  rangeDests: ChessDests;
+  meleeDests: ChessDests;
+  color: Color;
+  showDests: boolean;
+}

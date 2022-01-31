@@ -98,3 +98,50 @@ export function getAdjecentPosition(
   const positionToMove = getSquareFromNumbericalPosition(newPosition)
   return positionToMove
 }
+
+export function getIfPieceInbetweenOrigAndDest(
+  positions: PiecesPositions,
+  orig: PiecesID,
+  dest: PiecesID,
+): boolean {
+  const indexPositions = setPiecesPositionsBySquare(positions)
+  const positionAtOrigin = getNumbericalPosition(positions[orig])
+  const positionAtDest = getNumbericalPosition(positions[dest])
+  // console.group('get if piece in between ', orig, 'and ', dest);
+  // console.log('indexPositions', indexPositions)
+  // console.log('positionAtOrigin', positionAtOrigin)
+  // console.log('positionAtDEst', positionAtDest)
+  // console.groupEnd()
+  if (positionAtOrigin.col === positionAtDest.col) {
+    //on same column
+    const highGround = Math.max(positionAtDest.row,positionAtOrigin.row)
+    const lowGround = Math.min(positionAtDest.row,positionAtOrigin.row)
+    for (let i = lowGround + 1; i < highGround; i++) {
+      if (
+        indexPositions[
+          getSquareFromNumbericalPosition({col: positionAtOrigin.col, row: i})
+        ]
+      ) {
+        return true
+      }
+      continue
+    }
+    return false
+  } else if (positionAtOrigin.row === positionAtDest.row) {
+    //on same row
+    const highGround = Math.max(positionAtDest.col,positionAtOrigin.col)
+    const lowGround = Math.min(positionAtDest.col,positionAtOrigin.col)
+    for (let i = lowGround + 1; i < highGround; i++) {
+      if (
+        indexPositions[
+          getSquareFromNumbericalPosition({col: i, row: positionAtDest.row})
+        ]
+      ) {
+        return true
+      }
+      continue
+    }
+    return false
+  }
+  return false
+}

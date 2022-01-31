@@ -26,15 +26,7 @@ export const GameBoard: React.FC<ChessBoardProps> = (props) => {
   }
 
   function calcMovable() {
-    const move = {
-      free: false,
-      rangeDests: props.playable ? toDests(engine?.getEngine() || new WarChessEngine(getNewChessGame()), 'range') : undefined,
-      meleeDests: props.playable ? toDests(engine?.getEngine() || new WarChessEngine(getNewChessGame()), 'melee') : undefined,
-      color: engine?.getTurn(),
-      showDests: true,
-    }
-    console.log('movable ', move)
-    return move
+    return engine?.getDests();
   }
 
     return (
@@ -48,7 +40,9 @@ export const GameBoard: React.FC<ChessBoardProps> = (props) => {
           turnColor={engine.getTurn()}
           movable={calcMovable()}
           orientation={props.orientation || 'white'}
-          onMove={(move, type) => engine.onMove(move, type)}
+          onMove={(move, type) => {
+            engine.onMove(move, type)
+          }}
         />
       </>
     )

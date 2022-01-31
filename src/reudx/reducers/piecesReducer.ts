@@ -120,13 +120,14 @@ const stateSliceByKeyWithoutPersist = {
 };
 
 export const stateSliceByKey = {
-  pieces: persistReducer(
-    {
-      key: 'pieces',
-      storage,
-    },
-    reducer
-  ),
+  // pieces: persistReducer(
+  //   {
+  //     key: 'pieces',
+  //     storage,
+  //   },
+  //   reducer
+  // ),
+  pieces: reducer
 };
 
 export type ModuleState = ReturnType<typeof reducer>;

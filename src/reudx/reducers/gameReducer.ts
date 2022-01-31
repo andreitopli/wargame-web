@@ -30,13 +30,14 @@ const stateSliceByKeyWithoutPersist = {
 };
 
 export const stateSliceByKey = {
-  game: persistReducer(
-    {
-      key: 'game',
-      storage,
-    },
-    reducer
-  ),
+  // game: persistReducer(
+  //   {
+  //     key: 'game',
+  //     storage,
+  //   },
+  //   reducer
+  // ),
+  game: reducer
 };
 
 export type ModuleState = ReturnType<typeof reducer>;

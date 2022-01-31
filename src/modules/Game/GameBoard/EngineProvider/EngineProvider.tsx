@@ -1,11 +1,11 @@
-import {ShortMove} from 'chess.js'
+import {Move, ShortMove} from 'chess.js'
 import {Color, MoveType} from 'chessground/types'
 import React, {useEffect, useState} from 'react'
 import { useDispatch } from 'react-redux'
 import {getNewChessGame} from 'src/lib/chess/chess'
 import { Pubsy } from 'src/lib/Pubsy'
 import { updateHealth } from 'src/reudx/actions/pieces'
-import {Game, PiecesHealth, PiecesPositions} from '../../types'
+import {Game, MovableDests, PiecesHealth, PiecesPositions} from '../../types'
 import {otherChessColor, toChessColor} from '../StyledBoard/utils'
 import {WarChessEngine} from '../WarGameChessEngine'
 
@@ -16,8 +16,10 @@ export type EngineContextProps =
       getHealth: () => PiecesHealth
       getFen: () => string
       getTurn: () => Color
+      getHistory :() => Move[]
       getEngine: () => WarChessEngine
       onUpdate: (fn : (data: {health: PiecesHealth}) => void) => void;
+      getDests: () => MovableDests
     }
   | undefined
 
@@ -59,6 +61,9 @@ export const EngineProvider: React.FC<Props> = (props) => {
   useEffect(() => {
     setContextValue(() => {
       const engine = new WarChessEngine(getNewChessGame())
+      engine.onHealthUpdate(() => {
+        dispatch(updateHealth({health: engine.getHealth()}))
+      })
       return {
         onMove: (move: ShortMove, type: MoveType) => {
           engine.move(move, type)
@@ -69,7 +74,6 @@ export const EngineProvider: React.FC<Props> = (props) => {
             lastMoveBy: otherChessColor(toChessColor(engine.turn())),
             turn: toChessColor(engine.turn()),
           }))
-          dispatch(updateHealth({health: engine.getHealth()}))
         },
         getEngine: () => {
           return engine
@@ -80,11 +84,17 @@ export const EngineProvider: React.FC<Props> = (props) => {
         getTurn: () => {
           return toChessColor(engine.turn())
         },
+        getHistory :() => {
+          return engine.history()
+        },
         getPositions: () => {
           return engine.getPosition()
         },
         getHealth: () => {
           return engine.getHealth()
+        },
+        getDests: () => {
+          return engine.dests()
         },
         onUpdate: (fn : (data: {health: PiecesHealth}) => void) => {
           pubsy.subscribe('updateOverlays', fn)

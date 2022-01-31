@@ -50,7 +50,6 @@ export const StyledBoard: React.FC<StyledBoardProps> = ({
           height: props.size,
         })}
         onMove={(orig, dest,type) => {
-          console.log('type of move :', type);
           onMove({to: dest as Square, from: orig as Square}, type)
         }}
         orientation={orientation}
