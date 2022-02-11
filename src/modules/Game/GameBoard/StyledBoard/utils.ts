@@ -3,11 +3,11 @@ import { Api } from 'chessground/api'
 import {Color, MoveType} from 'chessground/types'
 import {ChessInstance, getNewChessGame} from 'src/lib/chess/chess'
 import { ChessColor, ChessColorBlack, ChessColorWhite, ChessDests } from 'src/modules/Game/types'
-import { WarChessEngine } from '../WarGameChessEngine'
+import { WarChessEngine } from '../../Providers/EngineProvider/WarGameChessEngine'
 
 export const noop = () => {}
 
-export const pgnToFen = (pgn: string) => getNewChessGame(pgn).fen();
+// export const pgnToFen = (pgn: string) => getNewChessGame(pgn).fen();
 
 export const getColor = (chess: ChessInstance): Color => {
   return chess.turn() === 'b' ? 'black' : 'white'

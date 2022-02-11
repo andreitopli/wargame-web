@@ -1,5 +1,5 @@
 import {createReducer} from 'deox'
-import { createNewGame } from 'src/modules/Game/GameBoard/EngineProvider/EngineProvider'
+import { createNewGame } from 'src/modules/Game/Providers/EngineProvider/EngineProvider'
 import {Game} from 'src/modules/Game/types'
 import {newGame, updateGame} from '../actions/game'
 import { GenericStateSlice } from '../types'

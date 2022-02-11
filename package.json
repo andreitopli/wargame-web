@@ -19,6 +19,7 @@
     "chessground": "https://github.com/andreitopli/chessground.git",
     "classnames": "^2.3.1",
     "deox": "^3.3.1",
+    "dstnd-io": "github:dstnd/dstnd-io#wargame-addon",
     "react": "^17.0.2",
     "react-chess-pieces": "^1.0.5",
     "react-chessboard": "https://github.com/andreitopli/react-chessboard.git",
@@ -34,6 +35,8 @@
     "redux-persist": "^6.0.0",
     "rxjs": "^7.4.0",
     "typescript": "^4.1.2",
+    "wargame-board": "github:andreitopli/wargame-board",
+    "wargame-engine": "github:andreitopli/wargame-engine",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

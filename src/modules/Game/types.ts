@@ -1,6 +1,7 @@
 import { Move, ShortMove, Square } from "chess.js";
 import { Color, Key } from "chessground/types";
 import { ChessgroundProps } from "react-chessground";
+import { RooksMoved } from "wargame-engine";
 
 export type PieceName = 'bishop' | 'pawn' | 'rook' | 'knight' | 'king' | 'queen';
 
@@ -29,7 +30,7 @@ export type Game = {
   //   black: number;
   // };
   homeColor: Color,
-  pgn: string;
+  fen: string;
   state : 'started' | 'stopped' | 'pending';
   players: [GamePlayer, GamePlayer];
   lastMoveBy: Color | undefined;
@@ -37,6 +38,20 @@ export type Game = {
   // lastMoveAt: string | undefined;
   // startedAt: string;
   // activePieces: ActivePieces;
+}
+
+export type HistoryMove = {
+  move: ChessMove,
+  type: MoveType,
+  rooksMoved: RooksMoved
+}
+
+export type GameWithPieces = Game & {
+  pieces: {
+    positions: PiecesPositions
+    healths: PiecesHealth
+  },
+  history: HistoryMove[]
 }
 
 export type PiecesHealthAndDamageDict = {

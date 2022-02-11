@@ -16,7 +16,7 @@ import {
   setPiecesPositionsBySquare,
 } from 'src/modules/Game/utils'
 import {MoveType} from 'chessground/types'
-import {toChessColor} from './StyledBoard/utils'
+import {toChessColor} from '../../GameBoard/StyledBoard/utils'
 import { Pubsy } from 'src/lib/Pubsy'
 
 type Rooks = 'wR1' | 'wR0' | 'bR0' | 'bR1'
@@ -142,18 +142,14 @@ export class WarChessEngine {
   private piecePositionIndexedBySquare: IndexPosition =
     setPiecesPositionsBySquare(this.piecePositions)
 
-  constructor(private chess: ChessInstance, pgn?: string) {
-    if (pgn) {
-      chess.load_pgn(pgn)
+  constructor(private chess: ChessInstance, fen?: string) {
+    if (fen) {
+      chess.load(fen)
     }
   }
 
   fen() {
     return this.chess.fen()
-  }
-
-  pgn() {
-    return this.chess.pgn()
   }
 
   turn() {
@@ -165,11 +161,11 @@ export class WarChessEngine {
     type: MoveType,
     options?: {sloppy?: boolean} | undefined,
   ): boolean {
-    const valid = this.chess.move(move, {}, type)
-    if (!valid) {
-      return false
-    }
-    this.chess.undo()
+    // const valid = this.chess.move(move, {}, type)
+    // if (!valid) {
+    //   return false
+    // }
+    // this.chess.undo()
 
     const pieceAtDest = this.piecePositionIndexedBySquare[move.to]
     const pieceAtOrig = this.piecePositionIndexedBySquare[move.from]
@@ -331,8 +327,8 @@ export class WarChessEngine {
     return this.chess.history({verbose: true})
   }
 
-  load(pgn: string) {
-    this.chess.load_pgn(pgn)
+  load(fen: string) {
+    this.chess.load(fen)
   }
 
   setPiecesPositions(positions: PiecesPositions) {
@@ -406,6 +402,10 @@ export class WarChessEngine {
     const newHealths = {...this.pieceHealth}
     newHealths[piece] = health
     this.setPiecesHealth(newHealths)
+  }
+  
+  getChess() {
+    return this.chess;
   }
 
   onHealthUpdate(fn : () => void) {

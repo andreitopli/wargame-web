@@ -2,6 +2,7 @@ import {useEffect} from 'react'
 import {createGenerateId, JssProvider} from 'react-jss'
 import './App.css'
 import {MainGame} from './modules/Game/MainGame'
+import {GameProvider} from './modules/Game/Providers/GameProvider/GameProvider'
 
 function App() {
   // const {game} = useSelector(selectGame)
@@ -11,14 +12,14 @@ function App() {
     // dispatch(setupGame());
   }, [])
 
-  const generateId = createGenerateId();
+  const generateId = createGenerateId()
 
   return (
     <div className="App">
-      <JssProvider 
-          generateId={generateId}
-          id={{ minify: true }}>
-        <MainGame boardOrientation="white" />
+      <JssProvider generateId={generateId} id={{minify: true}}>
+        <GameProvider>
+          <MainGame boardOrientation="white" />
+        </GameProvider>
       </JssProvider>
     </div>
   )

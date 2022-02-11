@@ -9,6 +9,7 @@ import {PieceInfoOverlayDOM} from './PieceInfoOverlayDOM'
 import cx from 'classnames'
 import { useSelector } from 'react-redux'
 import { selectPiecesHealth } from 'src/reudx/selectors/selectPiecesHealth'
+import { useGameProvider } from 'src/modules/Game/Providers/GameProvider/useGameProvider'
 
 type Props = {
   piece: PiecesID
@@ -16,7 +17,8 @@ type Props = {
 
 export const PieceInfoOverlay: React.FC<Props> = ({piece}) => {
   const cls = useStyles()
-  const piecesHealth = useSelector(selectPiecesHealth)
+  // const piecesHealth = useSelector(selectPiecesHealth)
+  const {healths : piecesHealth} = useGameProvider().game.pieces;
   // const engine = useEngineProvider()
   const [prevHealth, setPrevHealth] = useState(piecesHealth[piece])
   const [damage, setDamage] = useState(0)

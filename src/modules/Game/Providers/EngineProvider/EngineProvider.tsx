@@ -6,8 +6,8 @@ import {getNewChessGame} from 'src/lib/chess/chess'
 import { Pubsy } from 'src/lib/Pubsy'
 import { updateHealth } from 'src/reudx/actions/pieces'
 import {Game, MovableDests, PiecesHealth, PiecesPositions} from '../../types'
-import {otherChessColor, toChessColor} from '../StyledBoard/utils'
-import {WarChessEngine} from '../WarGameChessEngine'
+import {otherChessColor, toChessColor} from '../../GameBoard/StyledBoard/utils'
+import {WarChessEngine} from './WarGameChessEngine'
 
 export type EngineContextProps =
   | {
@@ -28,7 +28,7 @@ export const EngineContext = React.createContext<EngineContextProps>(undefined)
 export function createNewGame(): Game {
   const chess = getNewChessGame()
   return {
-    pgn: chess.pgn(),
+    fen: chess.fen(),
     id: new Date().getTime().toString(),
     state: 'pending',
     players: [
@@ -69,11 +69,13 @@ export const EngineProvider: React.FC<Props> = (props) => {
           engine.move(move, type)
           setGame((prev) => ({
             ...prev,
-            pgn: engine.pgn(),
+            fen: engine.fen(),
             state: 'started',
             lastMoveBy: otherChessColor(toChessColor(engine.turn())),
             turn: toChessColor(engine.turn()),
           }))
+          console.log('new pgn', engine.getChess().pgn())
+          console.log('new chess', engine.getChess())
         },
         getEngine: () => {
           return engine
