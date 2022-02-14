@@ -16,7 +16,7 @@
     "@types/redux-logger": "^3.0.9",
     "@types/redux-persist": "^4.3.1",
     "chess.js": "https://github.com/andreitopli/chess.js.git",
-    "chessground": "https://github.com/andreitopli/chessground.git",
+    "chessground-wargame": "https://github.com/andreitopli/chessground-wargame.git",
     "classnames": "^2.3.1",
     "deox": "^3.3.1",
     "dstnd-io": "github:dstnd/dstnd-io#wargame-addon",

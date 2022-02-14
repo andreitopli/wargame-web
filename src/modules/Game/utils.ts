@@ -1,4 +1,4 @@
-import {Square} from 'chess.js'
+import {ChessInstance, Square} from 'chess.js'
 import {files} from 'chessground/types'
 import {pieceInitialHealthAndDamage} from '../../config'
 import {
@@ -14,6 +14,8 @@ import {
 import {WarGameRecord, GuestUserRecord, warGameActions} from 'dstnd-io'
 import { getNewChessGame } from 'src/lib/chess/chess'
 import { defaultPiecesPositions } from 'wargame-engine/dist/gameConfig'
+import { Color } from 'chessground-wargame/types'
+import { WarChessEngine } from '../Engine/WarGameChessEngine'
 
 export const pieceTypeToPieceName: InitialToPieceName = {
   b: 'bishop',
@@ -23,6 +25,23 @@ export const pieceTypeToPieceName: InitialToPieceName = {
   k: 'king',
   p: 'pawn',
 }
+
+export const getColor = (chess: ChessInstance): Color => {
+  return chess.turn() === 'b' ? 'black' : 'white'
+}
+
+export const toChessColor = (c: 'w' | 'white' | 'b' | 'black') => {
+  return c === 'b' || c === 'black' ? 'black' : 'white';
+};
+
+export function toColor(chess: WarChessEngine): Color {
+  return chess.turn() === 'w' ? 'white' : 'black'
+}
+
+export const keyInObject = <X extends {}, Y extends PropertyKey>(
+  obj: X,
+  prop: Y
+): obj is X & Record<Y, unknown> => prop in obj;
 
 export function getPiecesDamage(piece: PiecesID): number {
   const p = piece.split('')[1].toLowerCase()

@@ -1,6 +1,6 @@
 import { Move, ShortMove, Square } from "chess.js";
 import { Color, Key } from "chessground/types";
-import { ChessgroundProps } from "react-chessground";
+import { ChessgroundProps } from "react-chessground-wargame";
 import { RooksMoved } from "wargame-engine";
 
 export type PieceName = 'bishop' | 'pawn' | 'rook' | 'knight' | 'king' | 'queen';

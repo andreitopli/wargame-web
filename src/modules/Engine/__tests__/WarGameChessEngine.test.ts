@@ -1,6 +1,6 @@
 import {ShortMove} from 'chess.js'
 import { getNewChessGame } from 'src/lib/chess/chess'
-import {WarChessEngine} from '../../Providers/EngineProvider/WarGameChessEngine'
+import {WarChessEngine} from '../WarGameChessEngine'
 
 
 describe('wargame engine test', () => {

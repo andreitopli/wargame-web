@@ -1,10 +1,6 @@
 import {Color} from 'chessground/types'
-import React, { useEffect } from 'react'
-import {EngineProvider} from './Providers/EngineProvider/EngineProvider'
-import {GameBoard} from './GameBoard/GameBoard'
+import React, {useEffect} from 'react'
 import {WarGameBoard} from 'wargame-board'
-import {createNewGame} from './utils'
-import {GameProvider} from './Providers/GameProvider/GameProvider'
 import {useGameProvider} from './Providers/GameProvider/useGameProvider'
 
 type Props = {
@@ -12,35 +8,23 @@ type Props = {
 }
 
 export const MainGame: React.FC<Props> = (props) => {
-  const {game} = useGameProvider()
+  const {game, moveAction} = useGameProvider()
+
   useEffect(() => {
-    console.log('game changed', game);
-  },[game])
+    console.log('game changed', game)
+  }, [game])
   return (
-    <>
-      {/* <EngineProvider
-      render={(game) => ( */}
-
-      <GameBoard
-        canInteract
-        size={600}
-        game={game}
-        playable
-        homeColor={'white'}
-        {...props}
-      />
-
-      {/* )} */}
-      {/* /> */}
-      {/* <WarGameBoard
-      game={createNewGame()}
-      homeColor='white'
+    <WarGameBoard
+      key={game.id}
+      game={game}
+      playableColor={'white'}
       orientation={props.boardOrientation}
       size={400}
-      onMove={() => {}}
+      onMove={(move, type) => {
+        moveAction({move, type})
+      }}
       canInteract
       playable
-    /> */}
-    </>
+    />
   )
 }

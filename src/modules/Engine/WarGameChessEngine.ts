@@ -14,16 +14,11 @@ import {
   getPiecesDamage,
   pieceTypeToPieceName,
   setPiecesPositionsBySquare,
+  toChessColor,
 } from 'src/modules/Game/utils'
-import {MoveType} from 'chessground/types'
-import {toChessColor} from '../../GameBoard/StyledBoard/utils'
-import { Pubsy } from 'src/lib/Pubsy'
+import {MoveType} from 'chessground-wargame/types'
 
 type Rooks = 'wR1' | 'wR0' | 'bR0' | 'bR1'
-
-type UpdateEvents = {
-  onUpdateHealth: undefined;
-}
 
 const piecesInitialPositions: PiecesPositions = {
   bR0: 'a8',
@@ -136,8 +131,6 @@ export class WarChessEngine {
     wP6: pieceInitialHealthAndDamage.pawn.health,
     wP7: pieceInitialHealthAndDamage.pawn.health,
   }
-
-  private pubsy = new Pubsy<UpdateEvents>();
 
   private piecePositionIndexedBySquare: IndexPosition =
     setPiecesPositionsBySquare(this.piecePositions)
@@ -337,7 +330,6 @@ export class WarChessEngine {
   }
   setPiecesHealth(healths: PiecesHealth) {
     this.pieceHealth = healths
-    this.pubsy.publish('onUpdateHealth', undefined);
   }
 
   getTurn() {
@@ -406,9 +398,5 @@ export class WarChessEngine {
   
   getChess() {
     return this.chess;
-  }
-
-  onHealthUpdate(fn : () => void) {
-    this.pubsy.subscribe('onUpdateHealth', fn)
   }
 }
